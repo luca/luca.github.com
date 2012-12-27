@@ -1,0 +1,21 @@
+<div class="navigation-wrapper">
+    <a href="/" title="{{ site.title }}" id="home-link" {{ unless page.image.feature }}class="no-image"{{ endif }}><i class="icon-home"></i></a>
+	<nav role="navigation" id="site-nav" class="animated drop" itemscope itemtype="http://schema.org/SiteNavigationElement">
+	    <ul>
+	        <li><a href="/" title="{{ site.title }}"><i class="icon-home"></i> Home</a></li>
+	        {% for link in site.links %}
+			<li>
+				{% if link.external %}
+					<a href="{{ link.url }}">{{ link.title }}</a>
+				{% else %}
+					<a href="{{ site.url }}{{ link.url }}">{{ link.title }}</a>
+				{% endif %} 
+			</li>
+	        {% endfor %}
+            {% if false %}
+	        <li><a href="{{ site.url }}/feed.xml" title="Atom/RSS feed"><i class="icon-rss"></i> Feed</a></li>
+            {% endif %}
+	    </ul>
+	</nav>
+</div><!-- /.navigation-wrapper -->
+

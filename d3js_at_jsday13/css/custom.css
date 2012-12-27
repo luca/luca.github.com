@@ -1,0 +1,41 @@
+.reveal h5 {
+    line-height:1.2;
+}
+#chart-gm {
+  margin-left: -40px;
+  height: 506px;
+}
+
+#chart-gm text {
+  font: 10px sans-serif;
+  fill:#fff;
+}
+
+#chart-gm .dot {
+  stroke: #fff;
+}
+
+#chart-gm .axis path, #chart-gm .axis line {
+  fill: none;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+#chart-gm .label {
+  fill: #777;
+}
+
+#chart-gm .year.label {
+  font: 500 100px "Ubuntu";
+  fill: #ddd;
+}
+
+#chart-gm .year.label.active {
+  fill: #aaa;
+}
+
+#chart-gm .overlay {
+  fill: none;
+  pointer-events: all;
+  cursor: ew-resize;
+}

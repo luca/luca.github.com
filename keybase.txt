@@ -1,0 +1,54 @@
+==================================================================
+https://keybase.io/lucamearelli
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://spazidigitali.com
+  * I am lucamearelli (https://keybase.io/lucamearelli) on keybase.
+  * I have a public key ASAgX_7LjZXZ4eBDM3-sZUSS3xcDF1lVk2x_D0cfNnIyhAo
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "0120205ffecb8d95d9e1e043337fac654492df1703175955936c7f0f471f367232840a",
+            "host": "keybase.io",
+            "kid": "0120205ffecb8d95d9e1e043337fac654492df1703175955936c7f0f471f367232840a",
+            "uid": "4a03c1679584364e5a4734c27d812400",
+            "username": "lucamearelli"
+        },
+        "service": {
+            "hostname": "spazidigitali.com",
+            "protocol": "http:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "client": {
+        "name": "keybase.io go client",
+        "version": "1.0.23"
+    },
+    "ctime": 1497520169,
+    "expire_in": 504576000,
+    "merkle_root": {
+        "ctime": 1497520160,
+        "hash": "b220149ba07f4dc4731a9f895790d76322f5100ac29488d7c577547ef994414c896a6ca1cbc1436e532067edfc05f9eb66c0d1d8971ea1ceb12f358ba3d0f6c9",
+        "seqno": 1172057
+    },
+    "prev": "468525cc63dd06ad7800b4a30e5bba42a357cc4bdc9d46c25f1570fef6d7b4d2",
+    "seqno": 10,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgIF/+y42V2eHgQzN/rGVEkt8XAxdZVZNsfw9HHzZyMoQKp3BheWxvYWTFAv57ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTIwMjA1ZmZlY2I4ZDk1ZDllMWUwNDMzMzdmYWM2NTQ0OTJkZjE3MDMxNzU5NTU5MzZjN2YwZjQ3MWYzNjcyMzI4NDBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwMjA1ZmZlY2I4ZDk1ZDllMWUwNDMzMzdmYWM2NTQ0OTJkZjE3MDMxNzU5NTU5MzZjN2YwZjQ3MWYzNjcyMzI4NDBhIiwidWlkIjoiNGEwM2MxNjc5NTg0MzY0ZTVhNDczNGMyN2Q4MTI0MDAiLCJ1c2VybmFtZSI6Imx1Y2FtZWFyZWxsaSJ9LCJzZXJ2aWNlIjp7Imhvc3RuYW1lIjoic3BhemlkaWdpdGFsaS5jb20iLCJwcm90b2NvbCI6Imh0dHA6In0sInR5cGUiOiJ3ZWJfc2VydmljZV9iaW5kaW5nIiwidmVyc2lvbiI6MX0sImNsaWVudCI6eyJuYW1lIjoia2V5YmFzZS5pbyBnbyBjbGllbnQiLCJ2ZXJzaW9uIjoiMS4wLjIzIn0sImN0aW1lIjoxNDk3NTIwMTY5LCJleHBpcmVfaW4iOjUwNDU3NjAwMCwibWVya2xlX3Jvb3QiOnsiY3RpbWUiOjE0OTc1MjAxNjAsImhhc2giOiJiMjIwMTQ5YmEwN2Y0ZGM0NzMxYTlmODk1NzkwZDc2MzIyZjUxMDBhYzI5NDg4ZDdjNTc3NTQ3ZWY5OTQ0MTRjODk2YTZjYTFjYmMxNDM2ZTUzMjA2N2VkZmMwNWY5ZWI2NmMwZDFkODk3MWVhMWNlYjEyZjM1OGJhM2QwZjZjOSIsInNlcW5vIjoxMTcyMDU3fSwicHJldiI6IjQ2ODUyNWNjNjNkZDA2YWQ3ODAwYjRhMzBlNWJiYTQyYTM1N2NjNGJkYzlkNDZjMjVmMTU3MGZlZjZkN2I0ZDIiLCJzZXFubyI6MTAsInRhZyI6InNpZ25hdHVyZSJ9o3NpZ8RArYa5xIvf0SuYDfLotcKLmNJaiumrLJIkqihcm+ZQ7WUuNlCeh4w5w3Ne2Wkl2kfDnbfkDYQ8Dic5Z2K7O4JRCahzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIO8vHGYQzonyIR6yesBJC9y5xgYrsDNNhEwzaV6QwfEMo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/lucamearelli
+
+==================================================================

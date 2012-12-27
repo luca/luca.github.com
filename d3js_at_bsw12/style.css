@@ -1,0 +1,259 @@
+body {
+  background: #929292;
+  font-family: 'Shanti', "Helvetica Neue", sans-serif;
+  margin: auto;
+  width: 1280px;
+}
+
+a {
+  color: #6baed6;
+  border-bottom: dotted 1px #969696;
+  text-decoration: none;
+}
+
+.stack {
+  background: #222 ;
+  color: #fff;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  display: none;
+  font-size: 36px;
+  height: 768px;
+  padding: 80px;
+  width: 1024px;
+  -webkit-transform: translate3d(0,0,0);
+}
+
+.active {
+  box-shadow: 0px 4px 8px rgba(0,0,0,.5);
+  display: block;
+  position: fixed;
+}
+
+@media
+screen and (max-device-width: 1024px) {
+  body {
+    width: 1024px;
+  }
+
+  .stack {
+    margin: 40px 0;
+  }
+
+  .stack {
+    display: block;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Ubuntu', "Helvetica Neue", sans-serif;
+  line-height: 1em;
+  margin: 0;
+  width: 864px;
+}
+
+h1 {
+  font-size: 60px;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 80px;	
+}
+.top {
+  position: absolute;
+  top: 80px;	
+}
+.small {
+	font-size:70%;
+}
+ul, pre {
+  margin: 0;
+}
+
+pre, code {
+  font-size: 22px;
+  font-family: "Oxygen Mono", monospace;
+}
+pre.bigger, pre.bigger code {
+	font-size:30px;
+}
+.chart {
+	font: 10px sans-serif;
+	margin:20px auto;
+	width:400px;
+	border: 1px dotted #404040;
+}
+.chart.full {
+	font: 10px sans-serif;
+	margin:20px auto;
+	width:auto;
+	border: 0;
+}
+.chart.large {
+	width:800px;
+}
+
+.chart circle.little {
+  fill: #eee;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+.chart .data rect {
+  fill: #bbb;
+  stroke: #ccc;
+}
+
+.chart .axis path,
+.chart .axis line {
+    fill: none;
+    stroke: white;
+    shape-rendering: crispEdges;
+}
+
+.chart .axis text {
+    font-size: 10px;
+    stroke: white;
+}
+
+#chart-help {
+	width:90%;
+	height:40%;
+}
+#chart-help, #chart-sr {
+	border: 1px dotted #404040;
+}
+#chart-gm {
+  margin-left: -40px;
+  height: 506px;
+}
+
+#chart-gm text {
+  font: 10px sans-serif;
+}
+
+#chart-gm .dot {
+  stroke: #fff;
+}
+
+#chart-gm .axis path, #chart-gm .axis line {
+  fill: none;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+#chart-gm .label {
+  fill: #777;
+}
+
+#chart-gm .year.label {
+  font: 500 100px "Ubuntu";
+  fill: #ddd;
+}
+
+#chart-gm .year.label.active {
+  fill: #aaa;
+}
+
+#chart-gm .overlay {
+  fill: none;
+  pointer-events: all;
+  cursor: ew-resize;
+}
+.attribution {
+	font-size:18px;
+	text-align:right;
+}
+rect.border {
+stroke: #fff;
+}
+.invisible path {
+  display: none;
+}
+.line {
+	stroke: steelblue;
+   	stroke-width: 1;
+   	fill: none;
+}
+line.link {
+	stroke: white;
+	stroke-opacity: .6;	
+}
+.chart text.title {
+	font-size:28px;
+	font-weight:bold;
+	fill:#ffffff;
+}
+q:before,
+blockquote:before {
+  content: "“";
+}
+
+q:after,
+blockquote:after {
+  content: "”";
+}
+
+q.nogap:after {
+  position: absolute;
+}
+
+.purple,
+.html .value,
+.javascript .string,
+.javascript .regexp {
+  color: #9e9ac8;
+}
+
+.blue,
+.html .tag,
+.css .tag,
+.javascript .keyword {
+  color: #6baed6;
+}
+
+.grey,
+.comment {
+  color: #969696;
+}
+
+.green,
+.html .doctype,
+.javascript .number {
+  color: #74c476;
+}
+
+.orange,
+.html .attribute,
+.css .attribute,
+.javascript .class,
+.javascript .special {
+  color: #fd8d3c;
+}
+
+.highlight {
+  background: #636363;
+}
+
+.pink {
+  color: #e377c2;
+}
+
+.white {
+  color: #fff;
+}
+
+.black {
+  color: #333;
+}
+
+.wall {
+  display: block;
+  height: 490px;
+  overflow: hidden;
+  word-break: break-all;
+}

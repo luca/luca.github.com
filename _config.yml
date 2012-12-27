@@ -1,0 +1,65 @@
+markdown: redcarpet
+highlighter: rouge
+baseurl: /
+title:            SpaziDigitali
+description:      "SpaziDigitali is the software consultancy and development studio of Luca Mearelli"
+logo:             site-logo.png
+disqus_shortname: 
+#Comment out url when working locally to resolve base urls correctly
+# url:              https://spazidigitali.com
+
+# Owner/author information
+owner:
+  name:           Luca Mearelli
+  avatar:         self_mini.jpg
+  email:          l@spazidigitali.com
+  # Social networking links used in footer. Update and remove as you like.
+  twitter:      
+  facebook:       
+  github: luca
+  stackexchange:  
+  linkedin: lucamearelli       
+  instagram:  
+  flickr:         
+  tumblr:         
+  # For Google Authorship https://plus.google.com/authorship
+  google_plus:    
+
+# Analytics and webmaster tools stuff goes here
+google_analytics: UA-48138201-1
+google_verify: NJkfynS3uxdfLxmQwzln6yEhAUkeutm4PSgt7GQ2cGg
+# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
+bing_verify:         
+
+# Links to include in top navigation
+# For external links add external: true
+# links:
+#   - title: About
+#     url: /about
+#   - title: Articles
+#     url: /articles
+
+# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+timezone:    Europe/Rome
+future:      true
+markdown:    kramdown
+
+# https://github.com/mojombo/jekyll/wiki/Permalinks
+permalink:   /:categories/:title
+
+syntax_highlighter_opts:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+
+  coderay:
+    coderay_line_numbers: 
+    coderay_line_numbers_start: 1
+    coderay_tab_width: 4
+    coderay_bold_every: 10
+    coderay_css: class
+
+include: [".htaccess"]
+exclude: ["config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec"]

@@ -1,0 +1,2218 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Beautiful Data(Driven) Visualizations with Javascript | Luca Mearelli</title>
+<style>
+
+@import url(http://fonts.googleapis.com/css?family=Oxygen+Mono|Ubuntu:500,700|Shanti&subset=latin,latin-ext);
+@import url(style.css);
+
+.big {
+  font-size: 128px;
+}
+
+.caption {
+  font-size: 96px;
+  text-align: center;
+  text-shadow: 0px 2px 6px rgba(0,0,0,.5);
+}
+
+</style>
+<body class="overview">
+<script src="d3.v2.js"></script>
+<script type='text/javascript'>
+// intro & selections
+var data = [32, 57, 112],
+	dataEnter = data.concat(293),
+    dataExit = data.slice(0, 2),
+    w = 400,
+    h = 300,
+    x = d3.scale.ordinal().domain([57, 32, 112]).rangePoints([0, w], 1),
+    y = d3.scale.ordinal().domain(data).rangePoints([0, h], 2);
+
+// scales
+var dataScale = [1000, 2000, 3000, 4000, 5000],
+	l = d3.scale.linear().domain([1000,5000]).range([20, w-20]),
+	lc = d3.scale.linear().domain([1000,5000]).range(["blue", "red"]),
+	o = d3.scale.ordinal().domain(dataScale).rangePoints([h-20, 20]),
+	oc = d3.scale.category10(),
+	s = d3.scale.sqrt().domain([1000,5000]).range([10, 50]),
+	lg = d3.scale.log().domain([1000,5000]).range([20, w-20]);
+</script>
+	
+<!-- Intro -->
+
+<section>
+	<h1 class="blue">Beautiful Data(Driven) Visualizations <span>with Javascript</span><br/>
+		<a href="www.bettersoftware.it" class="small grey">BetterSoftware 2012</a>
+	</h1>
+	<h2 class="bottom">Luca Mearelli | <span class="orange">@lmea</span> <span class="green">#d3js</span></h2>
+</section>
+
+<section>
+	<h1>Javascript <br>+<br> Web technologies
+	</h1>
+	<h3 class="bottom">Easy to tinker with, powerful, accessible <span class="grey">(standards!)</span>
+	</h3>
+</section>
+
+<section>
+	<h1>HTML5<br>
+		CSS<br>
+		SVG
+	</h1>
+	<h3 class="bottom">Web technologies
+	</h3>
+</section>
+
+<section>
+	<h1>From Data to DOM <span class="grey">and Back</span>
+	</h1>
+	<h3 class="bottom">D3 is not a new visual language but a tool to link data to elements and manipulate them.
+	</h3>
+</section>
+
+<!-- Basics -->
+<section>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;style&gt;/* CSS */&lt;/style&gt;
+&lt;body&gt;
+&lt;script src="d3.v2.js"&gt;&lt;/script&gt;
+&lt;script&gt;/* JavaScript */&lt;/script&gt;</code></pre>
+<h3 class="bottom">A d3 starter file</h3>
+</section>
+
+<section>
+	<h1>Use the browser developer tools</h1>
+<pre><code> ⌥⌘I</code></pre>
+	<h1>Serve from http</h1>
+<pre><code>
+python -m SimpleHTTTPServer -p 3000
+</code></pre>
+	<h3 class="bottom">Beginners' tips
+	</h3>
+</section>
+
+<!-- Selections -->
+<section>
+<pre><code>var circle = svg.selectAll("circle");</code></pre>
+<div class='chart' id='chart-2'>
+</div><script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-2").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  svg.selectAll(".little")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", x)
+      .attr("cy", y)
+      .attr("r", 12);
+
+  d3.select("#chart-2").on("click", function() {
+    svg.selectAll(".select").remove();
+
+    svg.selectAll(".select")
+        .data(data)
+      .enter().append("circle")
+        .attr("class", "select")
+        .attr("cx", x)
+        .attr("cy", y)
+        .attr("r", 60)
+        .style("fill", "none")
+        .style("stroke", "red")
+        .style("stroke-opacity", 1e-6)
+        .style("stroke-width", 3)
+      .transition()
+        .duration(750)
+        .attr("r", 12)
+        .style("stroke-opacity", 1);
+  });
+})();
+</script>
+
+	<h3 class="bottom">Selections
+	</h3>
+</section>
+
+<section>
+<pre><code>circle.style("fill", "steelblue");
+circle.attr("cy", 90);
+circle.attr("r", 30);</code></pre>
+<div class='chart' id='chart-3'>
+</div><script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-3").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var circle = svg.selectAll(".little")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", x)
+      .attr("cy", y)
+      .attr("r", 12);
+
+  d3.select("#chart-3").on("click", function() {
+    circle.style("fill", "#aaa").attr("r", 12).attr("cy", y);
+    circle.transition().duration(500).delay(0).style("fill", "steelblue");
+    circle.transition().duration(500).delay(500).attr("cy", 90);
+    circle.transition().duration(500).delay(1000).attr("r", 30);
+  });
+})();
+</script>
+  <h3 class="bottom">Selections</h3>
+</section>
+
+<section>
+  <pre><code>circle.attr("cx", function() {
+  return Math.random() * w;
+});
+  </code></pre>
+  <div class='chart' id='chart-4'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-4").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var circle = svg.selectAll(".little")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", x)
+      .attr("cy", y)
+      .attr("r", 12);
+
+  d3.select("#chart-4").on("click", function() {
+    circle.transition()
+        .duration(750)
+        .attr("cx", function() { return Math.random() * w; });
+  });
+})();
+  </script>
+  <h3 class="bottom">Selections</h3>
+</section>
+
+<!-- Data binding -->
+<section>
+  <pre><code>circle.data([32, 57, 112]);</code></pre>
+  <div class='chart' id='chart-5'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-5").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  svg.selectAll(".little")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", x)
+      .attr("cy", y)
+      .attr("r", 12);
+
+  var g = svg.selectAll(".data")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "data")
+      .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; });
+
+  g.append("rect")
+      .attr("x", -10)
+      .attr("y", -10)
+      .attr("width", 20)
+      .attr("height", 20);
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  d3.select("#chart-5").on("click", function() {
+    g
+        .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; })
+      .select("rect")
+        .style("opacity", 1);
+
+    g.transition()
+        .duration(750)
+        .attr("transform", function(d) { return "translate(" + x(d) + "," + y(d) + ")"; })
+      .select("rect")
+        .style("opacity", 1e-6);
+  });
+})();
+  </script>
+  <h3 class="bottom">Data</h3>
+</section>
+
+<section>
+  <pre><code>circle.attr("cx", function(d) {
+  return d;
+});
+circle.attr("r", function(d) {
+  return Math.sqrt(d);
+});</code></pre>
+  <div class='chart' id='chart-6'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-6").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var g = svg.selectAll("g")
+      .data(data)
+    .enter().append("g")
+      .attr("transform", function(d) { return "translate(" + x(d) + "," + y(d) + ")"; });
+
+  g.append("circle")
+      .attr("class", "little")
+      .attr("r", 12);
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  d3.select("#chart-6").on("click", function() {
+    g
+        .attr("transform", function(d) { return "translate(" + x(d) + "," + y(d) + ")"; })
+      .select("circle")
+        .attr("r", 12);
+
+    g.transition()
+        .duration(750)
+        .attr("transform", function(d) { return "translate(" + d + "," + y(d) + ")"; })
+      .select("circle")
+        .attr("r", Math.sqrt);
+  });
+})();
+  </script>
+  <h3 class="bottom">Data-bound functions</h3>
+</section>
+
+<section>
+  <pre><code>circle.attr("cx", function(d, i) {
+  return i * 100 + 30;
+});</code></pre>
+  <div class='chart' id='chart-6b'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-6b").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var g = svg.selectAll("g")
+      .data(data)
+    .enter().append("g")
+      .attr("transform", function(d) { return "translate(" + x(d) + "," + y(d) + ")"; });
+
+  g.append("circle")
+      .attr("class", "little")
+      .attr("r", 12);
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(function(d, i) { return i; });
+
+  d3.select("#chart-6b").on("click", function() {
+    g
+        .attr("transform", function(d) { return "translate(" + x(d) + "," + y(d) + ")"; })
+      .transition()
+        .duration(750)
+        .attr("transform", function(d, i) { return "translate(" + (i * 100 + 30) + "," + y(d) + ")"; });
+  });
+})();
+  </script>
+  <h3 class="bottom">Data-bound functions</h3>
+</section>
+
+<section>
+  <pre><code>var circle = svg.selectAll("circle")
+    .data([32, 57, 112, 293]);</code></pre>
+  <div class='chart' id='chart-7'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-7").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  svg.selectAll(".little")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", x)
+      .attr("cy", y)
+      .attr("r", 12);
+
+  var g = svg.selectAll(".data")
+      .data(dataEnter)
+    .enter().append("g")
+      .attr("class", "data")
+      .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; });
+
+  g.append("rect")
+      .attr("x", -10)
+      .attr("y", -10)
+      .attr("width", 20)
+      .attr("height", 20);
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  d3.select("#chart-7").on("click", function() {
+    g
+        .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; })
+      .select("rect")
+        .style("opacity", 1);
+
+    g.filter(function(d, i) { return i != 3; }).transition()
+        .duration(750)
+        .attr("transform", function(d) { return "translate(" + x(d) + "," + y(d) + ")"; })
+      .select("rect")
+        .style("opacity", 1e-6);
+
+    g.select("rect").filter(function(d, i) { return i == 3; })
+        .style("fill", "#eee")
+        .style("stroke", "#ccc")
+      .transition()
+        .duration(750)
+        .style("fill", "lightgreen")
+        .style("stroke", "green");
+  });
+})();
+
+  </script>
+  <h3 class="bottom">Adding data</h3>
+</section>
+
+<section>
+  <pre><code>var enter = circle.enter().append("circle");
+enter.attr("cy", 90);
+enter.attr("cx", 160);
+enter.attr("r", function(d) {
+  return Math.sqrt(d);
+});</code></pre>
+  <div class='chart' id='chart-8'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-8").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var g = svg.selectAll("g")
+      .data(data)
+    .enter().append("g")
+      .attr("transform", function(d) { return "translate(" + x(d) + "," + y(d) + ")"; });
+
+  g.append("circle")
+      .attr("class", "little")
+      .attr("r", 12);
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  var g = svg.selectAll(".data")
+      .data(dataEnter)
+    .enter().append("g")
+      .attr("class", "data")
+      .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; })
+      .filter(function(d, i) { return i == 3; });
+
+  g.append("circle")
+      .attr("class", "little")
+      .attr("r", 1e-6);
+
+  g.append("rect")
+      .attr("x", -10)
+      .attr("y", -10)
+      .attr("width", 20)
+      .attr("height", 20)
+      .style("fill", "lightgreen")
+      .style("stroke", "green");
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  d3.select("#chart-8").on("click", function() {
+    g.attr("transform", "translate(80,20)");
+    g.select("circle").attr("r", 1e-6);
+    g.select("rect").style("opacity", 1);
+    var t = g.transition().duration(750);
+    t.attr("transform", "translate(160,100)");
+    t.select("circle").attr("r", Math.sqrt);
+    t.select("rect").style("opacity", 1e-6);
+  });
+})();
+  </script>
+  <h3 class="bottom">Selections</h3>
+</section>
+
+<section>
+  <pre><code>var enter = circle.enter().append("circle");
+enter.attr("cy", 90);
+enter.attr("cx", function(d) {
+  return d;
+});
+enter.attr("r", function(d) {
+  return Math.sqrt(d);
+});</code></pre>
+  <div class='chart' id='chart-9'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-9").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var g = svg.selectAll(".data")
+      .data(dataEnter)
+    .enter().append("g")
+      .attr("class", "data")
+      .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; });
+
+  g.append("circle")
+      .attr("class", "little")
+      .attr("r", 1e-6);
+
+  g.append("rect")
+      .attr("x", -10)
+      .attr("y", -10)
+      .attr("width", 20)
+      .attr("height", 20)
+      .style("fill", "lightgreen")
+      .style("stroke", "green");
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  d3.select("#chart-9").on("click", function() {
+    g.attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; });
+    g.select("rect").style("opacity", 1);
+    g.select("circle").attr("r", 1e-6);
+
+    var t = g.transition().duration(750);
+    t.attr("transform", function(d, i) { return "translate(" + d + ",90)"; });
+    t.select("circle").attr("r", Math.sqrt);
+    t.select("rect").style("opacity", 1e-6);
+  });
+})();
+
+  </script>
+  <h3 class="bottom">Selections</h3>
+</section>
+
+<section>
+  <pre><code>
+svg.selectAll("circle")
+    .data([32, 57, 112, 293])
+  .enter().append("circle")
+    .attr("cy", 90)
+    .attr("cx", String)
+    .attr("r", Math.sqrt);</code></pre>
+  <div class='chart' id='chart-10'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-10").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var g = svg.selectAll(".data")
+      .data(dataEnter)
+    .enter().append("g")
+      .attr("class", "data")
+      .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; });
+
+  g.append("circle")
+      .attr("class", "little")
+      .attr("r", 1e-6);
+
+  g.append("rect")
+      .attr("x", -10)
+      .attr("y", -10)
+      .attr("width", 20)
+      .attr("height", 20)
+      .style("fill", "lightgreen")
+      .style("stroke", "green");
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  d3.select("#chart-10 button").on("click", function() {
+    g.attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; });
+    g.select("rect").style("opacity", 1);
+    g.select("circle").attr("r", 1e-6);
+
+    var t = g.transition().duration(750);
+    t.attr("transform", function(d, i) { return "translate(" + d + ",90)"; });
+    t.select("circle").attr("r", Math.sqrt);
+    t.select("rect").style("opacity", 1e-6);
+  });
+})();
+  </script>
+  <h3 class="bottom">Selections</h3>
+</section>
+
+<section>
+  <pre><code>
+var circle = svg.selectAll("circle")
+    .data([32, 57]);</code></pre>
+  <div class='chart' id='chart-11'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-11").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var circle = svg.selectAll(".little")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", x)
+      .attr("cy", y)
+      .attr("r", 12)
+      .filter(function(d, i) { return i == 2; });
+
+  var g = svg.selectAll(".data")
+      .data(dataExit)
+    .enter().append("g")
+      .attr("class", "data")
+      .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; });
+
+  g.append("rect")
+      .attr("x", -10)
+      .attr("y", -10)
+      .attr("width", 20)
+      .attr("height", 20);
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  d3.select("#chart-11").on("click", function() {
+    g
+        .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; })
+      .select("rect")
+        .style("opacity", 1);
+
+    g.transition()
+        .duration(750)
+        .attr("transform", function(d) { return "translate(" + x(d) + "," + y(d) + ")"; })
+      .select("rect")
+        .style("opacity", 1e-6);
+
+    circle
+        .style("fill", "#aaa")
+        .style("stroke", "#666")
+      .transition()
+        .duration(750)
+        .style("fill", "lightcoral")
+        .style("stroke", "red");
+  });
+})();
+  </script>
+  <h3 class="bottom">Selections</h3>
+</section>
+
+<section>
+  <pre><code>circle.exit().remove();</code></pre>
+  <div class='chart' id='chart-12'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-12").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var g = svg.selectAll(".data")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "data")
+      .attr("transform", function(d) { return "translate(" + x(d) + "," + y(d) + ")"; });
+
+  g.append("circle")
+      .attr("class", "little")
+      .attr("r", 12);
+
+  g.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  g = g.filter(function(d, i) { return i == 2; });
+
+  g.select("circle")
+      .style("fill", "lightcoral")
+      .style("stroke", "red");
+
+  d3.select("#chart-12").on("click", function() {
+    g.select("circle").attr("r", 12);
+    g.select("text").style("opacity", 1);
+    var t = g.transition().duration(750);
+    t.select("circle").attr("r", 1e-6);
+    t.select("text").style("opacity", 1e-6);
+  });
+})();
+  </script>
+  <h3 class="bottom">Selections</h3>
+</section>
+
+<section>
+  <pre><code></code></pre>
+  <div class='chart full' id='chart-13a'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-13a").append("svg")
+	  .append("g")
+	    .attr("transform", "translate(0,200)");
+
+	var data = svg.append("g").attr("transform", "translate(300)");
+	data.append("circle").style("fill", "green").style("fill-opacity", 0.50);
+	data.append("text").attr("y", -165).text("Data");
+	data.append("text").attr("x", -80).text("Enter");
+
+
+	var elements = svg.append("g").attr("transform", "translate(420)");
+	elements.append("circle").style("fill", "red").style("fill-opacity", 0.5);
+	elements.append("text").attr("y", -165).text("Elements");
+	elements.append("text").attr("x", 80).text("Exit");
+
+	svg.append("text").attr("x", 360).text("Update");
+
+	svg.selectAll("circle")
+	    .attr("r", 150);
+
+	svg.selectAll("text")
+	    .style("fill", "#ffffff")
+	    .style("font-weight", "bold")
+	    .style("font-size", "20px")
+	    .style("z-index", 99)
+	    .attr("dy", ".35em")
+	    .attr("text-anchor", "middle");
+	
+  d3.select("#chart-13a").on("click", function() {
+  });
+})();
+  </script>
+  <h3 class="bottom">Selections: joins</h3>
+</section>
+
+<section>
+  <pre><code>var circle = svg.selectAll("circle")
+    	.data([32, 57, 293], String)
+    .enter().append("circle")
+    	.attr("cy", 90)
+    	.attr("cx", String)
+    	.attr("r", Math.sqrt)
+    .exit().remove();</code></pre>
+  <div class='chart' id='chart-13'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-13").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var gd = svg.selectAll(".data")
+      .data([32, 57, 293])
+    .enter().append("g")
+      .attr("class", "data")
+      .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; });
+
+  var ed = gd.filter(function(d, i) { return i == 2; }),
+      ud = gd.filter(function(d, i) { return i != 2; });
+
+  ed.append("circle")
+      .attr("class", "little")
+      .attr("r", 1e-6);
+
+  gd.append("rect")
+      .attr("x", -10)
+      .attr("y", -10)
+      .attr("width", 20)
+      .attr("height", 20);
+
+  gd.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  var ge = svg.selectAll(".element")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "element")
+      .attr("transform", function(d) { return "translate(" + d + ",90)"; });
+
+  ge.append("circle")
+      .attr("class", "little")
+      .attr("r", Math.sqrt);
+
+  ge.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(String);
+
+  ed.select("rect")
+      .style("fill", "lightgreen")
+      .style("stroke", "green");
+
+  var xe = ge.filter(function(d, i) { return i == 2; });
+
+  xe.select("circle")
+      .style("fill", "lightcoral")
+      .style("stroke", "red");
+
+  d3.select("#chart-13").on("click", function() {
+    gd
+        .attr("transform", function(d, i) { return "translate(" + 20 * (i + 1) + ",20)"; })
+      .transition()
+        .duration(750)
+        .attr("transform", function(d) { return "translate(" + d + ",90)"; });
+
+    gd.select("rect")
+        .style("opacity", 1)
+      .transition()
+        .duration(750)
+        .style("opacity", 1e-6);
+
+    ed.select("circle")
+        .attr("r", 1e-6)
+      .transition()
+        .duration(750)
+        .attr("r", Math.sqrt);
+
+    xe.select("circle")
+        .attr("r", Math.sqrt)
+      .transition()
+        .duration(750)
+        .attr("r", 1e-6);
+
+    xe.select("text")
+        .style("opacity", 1)
+      .transition()
+        .duration(750)
+        .style("opacity", 1e-6);
+  });
+})();
+  </script>
+  <h3 class="bottom">Selections</h3>
+</section>
+
+<!-- Scales & Axes -->
+<section>
+  <h1>Input domain ↦ Output range</h1>
+  <h3 class="bottom">Scales</h3>
+</section>
+
+<section>
+  <pre><code>dataScale = [1000, 2000, 3000, 4000, 5000];
+
+l = d3.scale.linear()
+      .domain([1000,5000])
+      .range([20, 380]);
+
+circle.attr("cx", l);</code></pre>
+  <div class='chart' id='chart-14'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-14").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var circle = svg.selectAll(".little")
+      .data(dataScale)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", l)
+      .attr("cy", o)
+      .attr("r", 12);
+
+  circle
+	.style("fill", "#aaa")
+    .style("stroke", "#666")
+    .style("opacity", "0");
+
+  d3.select("#chart-14").on("click", function() {
+    circle
+    	.style("opacity", "0")
+     .transition()
+        .duration(500)
+		.delay(function(d, i) { return i / 5 * 500; })
+        .style("opacity", "1");
+  });
+})();
+  </script>
+  <h3 class="bottom">Linear Scale</h3>
+</section>
+
+<section>
+  <pre><code>lc = d3.scale.linear()
+      .domain([1000,5000])
+      .range(["blue", "red"]);
+
+circle.attr("fill", lc);</code></pre>
+  <div class='chart' id='chart-15'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-15").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var circle = svg.selectAll(".little")
+      .data(dataScale)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", l)
+      .attr("cy", o)
+      .attr("r", 12);
+
+  circle
+	.style("fill", "#aaa")
+    .style("stroke", "#666");
+
+  d3.select("#chart-15").on("click", function() {
+    circle
+		.style("fill", "#aaa")
+     .transition()
+        .duration(500)
+		.delay(function(d, i) { return i / 5 * 500; })
+		.style("fill", lc);
+  });
+})();
+  </script>
+  <h3 class="bottom">Linear Scale: Interpolation</h3>
+</section>
+
+<section>
+  <pre><code>s = d3.scale.sqrt()
+      .domain([1000,5000])
+      .round([10, 50]);
+
+circle.attr("r", s);</code></pre>
+  <div class='chart' id='chart-16'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-16").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+  
+  o2 = d3.scale.ordinal().domain(dataScale).rangePoints([h-20, 60]);
+  l2 = d3.scale.linear().domain([1000,5000]).rangeRound([20, w-60]);
+
+  var circle = svg.selectAll(".little")
+      .data(dataScale)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", l2)
+      .attr("cy", o2)
+      .attr("r", 10);
+
+  circle
+	.style("fill", "#aaa")
+    .style("stroke", "#666");
+
+  d3.select("#chart-16").on("click", function() {
+    circle
+    	.attr("r", 10)
+     .transition()
+        .duration(500)
+		.delay(function(d, i) { return i / 5 * 500; })
+        .attr("r", s);
+  });
+})();
+  </script>
+  <h3 class="bottom">Square Root Scale</h3>
+</section>
+
+<section>
+  <pre><code>lg = d3.scale.log()
+       .domain([1000,5000])
+       .range([20, 380]);
+
+circle.attr("cx", l);</code></pre>
+  <div class='chart' id='chart-17'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-17").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var circle = svg.selectAll(".little")
+      .data(dataScale)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", lg)
+      .attr("cy", o)
+      .attr("r", 12);
+
+  circle
+	.style("fill", "#aaa")
+    .style("stroke", "#666")
+    .style("opacity", "0");
+
+  d3.select("#chart-17").on("click", function() {
+    circle
+    	.style("opacity", "0")
+     .transition()
+        .duration(500)
+		.delay(function(d, i) { return i / 5 * 500; })
+        .style("opacity", "1");
+  });
+})();
+  </script>
+  <h3 class="bottom">Logarithmic Scale</h3>
+</section>
+
+<section>
+  <pre><code>o = d3.scale.ordinal()
+      .domain(dataScale)
+      .rangePoints([h-20, 20]);
+circle.attr("cx", o);
+
+oc = d3.scale.category10(),
+circle.attr("fill", oc);
+</code></pre>
+  <div class='chart' id='chart-18'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-18").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  var circle = svg.selectAll(".little")
+      .data(dataScale)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", l)
+      .attr("cy", o)
+      .attr("r", 12);
+
+  circle
+	.style("fill", "#aaa")
+    .style("stroke", "#666");
+
+  d3.select("#chart-18").on("click", function() {
+    circle
+ 		.style("fill", "#aaa")
+     .transition()
+        .duration(500)
+		.delay(function(d, i) { return i / 5 * 500; })
+        .style("fill", oc);
+  });
+})();
+
+  </script>
+  <h3 class="bottom">Ordinal Scales</h3>
+</section>
+
+<section>
+  <pre><code>var ya = d3.svg.axis()
+               .scale(o)
+               .orient("left");
+
+svg.append(ya);</code></pre>
+  <div class='chart' id='chart-19'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-19").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  l3 = d3.scale.linear().domain([1000,5000]).rangeRound([60, w-20]);
+  var ya = d3.svg.axis()
+                 .scale(o)
+                 .orient("left");
+  
+  svg.style("padding-left", '40px');
+
+  svg.append("g")
+      .attr("class", "axis")  //Assign "axis" class
+      .attr("transform", "translate(40,0)")
+      .call(ya);  
+  
+  var circle = svg.selectAll(".little")
+      .data(dataScale)
+    .enter().append("circle")
+      .attr("class", "little")
+      .attr("cx", l3)
+      .attr("cy", o)
+      .attr("r", 10);
+
+  circle
+	.style("fill", "#aaa")
+    .style("stroke", "#666");
+
+})();
+
+  </script>
+  <h3 class="bottom">Axes</h3>
+</section>
+
+<!-- Animations -->
+<section>
+  <pre><code>circle.transition()
+      .duration(1000)
+      .style("fill", "red")
+      .attr("r", 100)
+      .attr("cx", 150)
+      .attr("cy", 150);</code></pre>
+  <div class='chart' id='chart-20'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-20").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  circle = svg.append("circle")
+	          .style("fill", "#aaa")
+  			  .style("stroke", "#666")
+	          .attr("r", 40)
+	          .attr("cx", 60)
+	          .attr("cy", 60);  
+
+  d3.select("#chart-20").on("click", function() {
+    circle
+		.style("fill", "#aaa")
+		.attr("r", 40)
+      	.attr("cx", 60)
+      	.attr("cy", 60)
+     .transition()
+        .duration(1000)
+		.style("fill", "red")
+        .attr("r", 100)
+      	.attr("cx", 150)
+      	.attr("cy", 150);
+  });
+
+})();
+
+  </script>
+  <h3 class="bottom">Animations</h3>
+</section>
+
+<section>
+  <pre><code>circle
+  .transition().duration(1000)
+    .attr("cx", w-60)
+  .transition().duration(1000).delay(1000)
+    .attr("cy", h-60)
+  .transition().duration(1000).delay(2000)
+    .attr("cx", 60);</code></pre>
+  <div class='chart' id='chart-21'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-21").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  circle = svg.append("circle")
+	          .style("fill", "#aaa")
+  			  .style("stroke", "#666")
+	          .attr("r", 40)
+	          .attr("cx", 60)
+	          .attr("cy", 60);  
+
+  d3.select("#chart-21").on("click", function() {
+    circle
+		.attr("cx", 60)
+      	.attr("cy", 60)
+     .transition()
+        .duration(1000)
+		.attr("cx", w-60)
+     .transition()
+        .duration(1000)
+        .delay(1000)
+		.attr("cy", h-60)
+     .transition()
+        .duration(1000)
+        .delay(2000)
+		.attr("cx", 60);
+;
+  });
+
+})();
+
+  </script>
+  <h3 class="bottom">Animation delay</h3>
+</section>
+
+<section>
+  <pre><code>var moveCircle = function(what) {
+  return function() {
+    d3.select(this).transition()
+      .attr("cx", xc(what)).attr("cy", yc(what))
+      .each("end", moveCircle(what+1));
+    };
+}
+circle.transition().each("end", moveCircle(1));
+</code></pre>
+  <div class='chart' id='chart-22'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-22").append("svg")
+      .attr("width", w)
+      .attr("height", h);
+
+  circle = svg.append("circle")
+	          .style("fill", "#aaa")
+  			  .style("stroke", "#666")
+	          .attr("r", 40)
+	          .attr("cx", 60)
+	          .attr("cy", 60);  
+  
+  var points = [[60,60], [w-60,60], [w-60,h-60], [60,h-60]];
+  var xc = function(what){
+	return points[what%4][0];  
+  }
+  var yc = function(what){
+	return points[what%4][1];  
+  }
+  var moveCircle = function(what) {
+	return function() {
+	    d3.select(this).transition()
+	        .attr("cx", xc(what))
+	        .attr("cy", yc(what))
+			.each("end", moveCircle(what+1));
+	  };
+  }
+  d3.select("#chart-22").on("click", function() {
+    circle
+		.attr("cx", 60)
+      	.attr("cy", 60)
+     .transition()
+        .duration(600)
+		.each("end", moveCircle(1));
+  });
+
+})();
+
+  </script>
+  <h3 class="bottom">Animation chaining</h3>
+</section>
+
+<!-- Loading data -->
+
+<section>
+	<h1>JSON</h1>
+	<h1>CSV</h1>
+	<h1>TSV</h1>
+	<h1>XML</h1>
+	<h1>Text</h1>
+  <h3 class="bottom">Loading Data</h3>
+</section>
+
+<section>
+  <pre>
+museo;anno;presenze
+"musei civici fiorentini";2006;580872
+"galleria degli uffizi";2006;1663438
+"galleria dell accademia";2006;1236938
+"museo di san marco";2006;194627
+"museo di palazzo davanzati";2006;65477
+...
+</pre>
+  <h3 class="bottom">Loading CSV</h3>
+</section>
+
+<section>
+  <pre><code>d3.csv("ingressi_musei.csv", function(ingressi) {
+  ingressi.forEach(function(d) {
+    d.presenze = +d.presenze;
+  });
+  var uffizi = ingressi.filter(function(d){ 
+	return d.museo == "galleria degli uffizi"
+  });
+  // then build the visualization
+});
+</code></pre>
+  <div class='chart' id='chart-23'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-23").append("svg")
+      .attr("width", w)
+      .attr("height", h-60);
+  
+  var build = function(data) {
+	  var years = data.map(function(d){ return d.anno; });
+	  var values = data.map(function(d){ return d.presenze; });
+	  var x = d3.scale.ordinal().domain(years).rangePoints([80, w-30]);
+	  var y = d3.scale.linear().domain([d3.max(values), d3.min(values)]).range([10, h-90]);
+	  
+	  // bottom x axis
+	  var xAxis = d3.svg.axis().scale(x);
+	  svg.append("svg:g")
+	        .attr("class", "x axis")
+	        .attr("transform", "translate(0," + (h-80) + ")")
+	        .call(xAxis);	
+	  
+	  // left y axis
+	  var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+	  svg.append("svg:g")
+	        .attr("class", "y axis")
+	        .attr("transform", "translate(70,0)")
+	        .call(yAxisLeft);
+	
+	  var line = d3.svg.line()
+	  	.x(function(d,i) { return x(d.anno); })
+	  	.y(function(d,i) { return y(d.presenze); });
+      
+	  // 	  var l = svg.append("svg:path").attr("class", "line");
+	  // 	  function draw(k) {
+	  // l.attr("d", line(data.slice(0,k)));	  
+	  // 	  }
+	
+	  // var  k = 0;
+	  // d3.timer(function() {
+	  //   k+=1;
+	  //   draw(k);
+	  //   if (k ==data.length) {return true;}
+	  // }, 500);
+	  svg.append("svg:path").attr("class", "line").attr("d", line(data));	  
+      
+	  var circle = svg.selectAll(".little")
+	      .data(data)
+	    .enter().append("circle")
+	      .attr("class", "little")
+	      .attr("cx", function(d){ return x(d.anno); })
+	      .attr("cy", function(d){ return y(d.presenze); })
+	      .attr("r", 3);
+
+ }
+  d3.select("#chart-23").on("click", function() {
+	d3.csv("ingressi_musei.csv", function(ingressi) {
+	  ingressi.forEach(function(d) {
+	    d.presenze = +d.presenze;
+	  });
+	  var uffizi = ingressi.filter(function(d){ 
+		return d.museo == "galleria degli uffizi"
+	  });
+	
+	  build(uffizi);
+	
+	});
+  });
+
+})();
+  </script>
+  <h3 class="bottom">Loading CSV</h3>
+</section>
+
+<section>
+  <pre><code>var nest = d3.nest()
+  .key(function(d) { return d.anno; })
+  .entries(ingressi);
+  
+var totals = d3.nest()
+  .key(function(d) { return d.anno; })
+  .rollup(function(d) {
+    return {
+      presenze:d3.sum(d,function(g){return g.presenze;})
+    };
+  })
+  .entries(ingressi);
+</code></pre>
+  <div class='chart' id='chart-24'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var svg = d3.select("#chart-24").append("svg")
+      .attr("width", w)
+      .attr("height", h-130);
+
+  var build = function(data) {
+	  var years = data.map(function(d){ return d.anno; });
+	  var values = data.map(function(d){ return d.presenze; });
+	  var x = d3.scale.ordinal().domain(years).rangePoints([80, w-30]);
+	  var y = d3.scale.linear().domain([d3.max(values), d3.min(values)]).range([10, h-160]);
+
+	  // bottom x axis
+	  var xAxis = d3.svg.axis().scale(x);
+	  svg.append("svg:g")
+	        .attr("class", "x axis")
+	        .attr("transform", "translate(0," + (h-150) + ")")
+	        .call(xAxis);	
+
+	  // left y axis
+	  var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+	  svg.append("svg:g")
+	        .attr("class", "y axis")
+	        .attr("transform", "translate(70,0)")
+	        .call(yAxisLeft);
+
+	  var line = d3.svg.line()
+	  	.x(function(d,i) { return x(d.anno); })
+	  	.y(function(d,i) { return y(d.presenze); });
+
+	  svg.append("svg:path").attr("class", "line").attr("d", line(data));	  
+
+	  var circle = svg.selectAll(".little")
+	      .data(data)
+	    .enter().append("circle")
+	      .attr("class", "little")
+	      .attr("cx", function(d){ return x(d.anno); })
+	      .attr("cy", function(d){ return y(d.presenze); })
+	      .attr("r", 3);
+
+  }
+  d3.select("#chart-24").on("click", function() {
+	d3.csv("ingressi_musei.csv", function(ingressi) {
+	  ingressi.forEach(function(d) {
+	    d.presenze = +d.presenze;
+	  });
+
+	  var grouped = d3.nest()
+	    .key(function(d) { return d.anno; })
+	    .rollup(function(d) {
+		  return {
+		    presenze:d3.sum(d,function(g) {return g.presenze;})
+		  };
+		})
+	    .entries(ingressi);
+	  
+	  var totals = grouped.map(function(d){
+		return {
+			anno: d.key,
+			presenze: d.values.presenze
+		}
+	  })
+	 
+	  build(totals);
+
+	});
+  });
+
+})();
+  </script>
+  <h3 class="bottom">Data manipulation</h3>
+</section>
+
+<section>
+  <pre><code>var rects = svg.selectAll('rect')
+               .data(data, function(d){ 
+                 return d.museo; 
+               });
+</code></pre>
+  <div class='chart large' id='chart-25'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var data_map = {}, 
+      x = null,
+      y = null,
+      c = null;
+
+  var svg = d3.select("#chart-25").append("svg")
+      .attr("width", 800)
+      .attr("height", h);
+
+  var build = function(data, year) {
+
+	svg.select("text.title").transition().duration(500).text(year)
+    // Create the bar chart which consists of ten SVG rectangles, one for each piece of data
+	var rects = svg.selectAll('rect').data(data, function(d){ return d.museo; });
+	
+	rects.enter().append('rect')
+	      	.attr("stroke", "none").attr("fill", function(d){ return c(d.museo);})
+	   		.attr("x", function(d, i) { return x(d.museo)-50; } )
+	   		.attr("width",  100)
+	      	.attr("y", function(d) { return h - 30; })
+	      .transition().duration(500)
+	      	.attr("y", function(d) { return y(d.presenze); })
+	      	.attr("height", function(d) { return h-30-y(d.presenze); });
+	
+	rects.transition().duration(500)
+		.attr("y", function(d) { return y(d.presenze); })
+		.attr("height", function(d) { return h-30-y(d.presenze); });
+		
+
+  }
+
+	d3.csv("ingressi_musei.csv", function(ingressi) {
+	  ingressi.forEach(function(d) {
+	    d.presenze = +d.presenze;
+	  });
+
+	  var grouped = d3.nest()
+	    .key(function(d) { return d.anno; })
+	    .entries(ingressi);
+	  
+	  grouped.forEach(function(e){
+		data_map[e.key] = e.values;
+	  });
+	
+	  var years = grouped.map(function(d){ return d.key; }).sort();
+	  var museums = d3.nest()
+	    .key(function(d) { return d.museo; })
+	    .entries(ingressi).map(function(d){ return d.key; }).sort();
+	
+	  var values = ingressi.map(function(d){ return d.presenze })
+	  x = d3.scale.ordinal().domain(museums).rangePoints([130, 740]);
+	  y = d3.scale.linear().domain([d3.max(values)+100000, 0]).range([10, h-30]);
+	  c = d3.scale.category10().domain(museums);
+	
+	  // bottom x axis
+	  var xAxis = d3.svg.axis().scale(x).tickSize(0);
+	  svg.append("svg:g")
+	        .attr("class", "x axis invisible")
+	        .attr("transform", "translate(0," + (h-20) + ")")
+	        .call(xAxis);	
+
+	  // left y axis
+	  var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+	  svg.append("svg:g")
+	        .attr("class", "y axis")
+	        .attr("transform", "translate(70,0)")
+	        .call(yAxisLeft);
+	  
+	  svg.append("text")
+	     .attr("class", "title")
+		 .attr("transform", "translate(730,30)")
+		 .text(years[0]);
+		
+	  var i = 0;
+	  
+	  var step = function() {
+  		  var current = years[i%years.length];
+  		  var data = data_map[current];
+  		  if (data) {
+  		      build(data, current);			
+  		  }
+		  i++;
+		  if (i%years.length>0) {
+		      setTimeout(step, 2000);			
+		  }
+	  }
+	  d3.select("#chart-25").on("click", function() {
+	  		  i = 0 ;
+			  step();
+	  });
+	
+	  build(data_map[years[0]], years[0]);	
+	  // 
+	  // d3.select("#chart-25").on("click", function() {
+	  // 		  i += 1;
+	  // 		  var current = years[i%years.length];
+	  // 		  var data = data_map[current];
+	  // 		  if (data) {
+	  // 		      build(data, current);			
+	  // 		  }
+	  // });
+
+	});
+
+})();
+  </script>
+  <h3 class="bottom">Data key</h3>
+</section>
+
+<section>
+  <pre><code>[
+  {
+    "museo": "musei civici fiorentini",
+    "anno": 2006,
+    "presenze": 580872
+  },
+  {
+    "museo": "galleria degli uffizi",
+    "anno": 2006,
+    "presenze": 1663438
+  },
+  {
+    "museo": "galleria dell accademia",
+    "anno": 2006,
+    "presenze": 1236938
+  },
+	...
+]
+</code></pre>
+  <h3 class="bottom">JSON</h3>
+</section>
+
+<section>
+  <pre><code>d3.json("ingressi_musei.json", function(ingressi) { })
+	
+</code></pre>
+  <div class='chart large' id='chart-26'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+  var data_map = {}, 
+      x = null,
+      y = null,
+      c = null;
+
+  var svg = d3.select("#chart-26").append("svg")
+      .attr("width", 800)
+      .attr("height", h);
+
+  var build = function(data, year) {
+
+	svg.select("text.title").transition().duration(500).text(year)
+    // Create the bar chart which consists of ten SVG rectangles, one for each piece of data
+	var rects = svg.selectAll('rect').data(data, function(d){ return d.museo; });
+	
+	rects.enter().append('rect')
+	      	.attr("stroke", "none").attr("fill", function(d){ return c(d.museo);})
+	   		.attr("x", function(d, i) { return x(d.museo)-50; } )
+	   		.attr("width",  100)
+	      	.attr("y", function(d) { return h - 30; })
+	      .transition().duration(500)
+	      	.attr("y", function(d) { return y(d.presenze); })
+	      	.attr("height", function(d) { return h-30-y(d.presenze); });
+	
+	rects.transition().duration(500)
+		.attr("y", function(d) { return y(d.presenze); })
+		.attr("height", function(d) { return h-30-y(d.presenze); });
+		
+
+  }
+
+	d3.json("ingressi_musei.json", function(ingressi) {
+	  var grouped = d3.nest()
+	    .key(function(d) { return d.anno; })
+	    .entries(ingressi);
+	  
+	  grouped.forEach(function(e){
+		data_map[e.key] = e.values;
+	  });
+	
+	  var years = grouped.map(function(d){ return d.key; }).sort();
+	  var museums = d3.nest()
+	    .key(function(d) { return d.museo; })
+	    .entries(ingressi).map(function(d){ return d.key; }).sort();
+	
+	  var values = ingressi.map(function(d){ return d.presenze })
+	  x = d3.scale.ordinal().domain(museums).rangePoints([130, 740]);
+	  y = d3.scale.linear().domain([d3.max(values)+100000, 0]).range([10, h-30]);
+	  c = d3.scale.category10().domain(museums);
+	
+	  // bottom x axis
+	  var xAxis = d3.svg.axis().scale(x).tickSize(0);
+	  svg.append("svg:g")
+	        .attr("class", "x axis invisible")
+	        .attr("transform", "translate(0," + (h-20) + ")")
+	        .call(xAxis);	
+
+	  // left y axis
+	  var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+	  svg.append("svg:g")
+	        .attr("class", "y axis")
+	        .attr("transform", "translate(70,0)")
+	        .call(yAxisLeft);
+	  
+	  svg.append("text")
+	     .attr("class", "title")
+		 .attr("transform", "translate(730,30)")
+		 .text(years[0]);
+		
+	  var i = 0;
+	  
+	  var step = function() {
+  		  var current = years[i%years.length];
+  		  var data = data_map[current];
+  		  if (data) {
+  		      build(data, current);			
+  		  }
+		  i++;
+		  if (i%years.length>0) {
+		      setTimeout(step, 2000);			
+		  }
+	  }
+	  d3.select("#chart-26").on("click", function() {
+	  		  i = 0 ;
+			  step();
+	  });
+	
+	  build(data_map[years[0]], years[0]);	
+	  // 
+	  // d3.select("#chart-25").on("click", function() {
+	  // 		  i += 1;
+	  // 		  var current = years[i%years.length];
+	  // 		  var data = data_map[current];
+	  // 		  if (data) {
+	  // 		      build(data, current);			
+	  // 		  }
+	  // });
+
+	});
+
+})();
+  </script>
+  <h3 class="bottom">JSON</h3>
+</section>
+
+<!-- Layouts & complex examples -->
+<section>
+  <pre><code>d3.layout.force()
+  .charge(-120)
+  .linkDistance(30)
+  .size([width, height])
+  .nodes(json.nodes)
+  .links(json.links)
+  .start();	
+</code></pre>
+  <div class='chart large' id='chart-27'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+
+	var width = 800,
+	    height = h;
+	
+    var svg = d3.select("#chart-27").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+
+	var color = d3.scale.category20();
+
+	var force = d3.layout.force()
+	    .charge(-120)
+	    .linkDistance(30)
+	    .size([width, height]);
+	
+	d3.json("miserables.json", function(json) {
+	  force
+	      .nodes(json.nodes)
+	      .links(json.links);
+
+	  var link = svg.selectAll("line.link")
+	      .data(json.links)
+	    .enter().append("line")
+	      .attr("class", "link")
+	      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+	  var node = svg.selectAll("circle.node")
+	      .data(json.nodes)
+	    .enter().append("circle")
+	      .attr("class", "node")
+	      .attr("r", 5)
+	      .style("fill", function(d) { return color(d.group); })
+	      .call(force.drag);
+
+	  node.append("title")
+	      .text(function(d) { return d.name; });
+
+	  force.on("tick", function() {
+	    link.attr("x1", function(d) { return d.source.x; })
+	        .attr("y1", function(d) { return d.source.y; })
+	        .attr("x2", function(d) { return d.target.x; })
+	        .attr("y2", function(d) { return d.target.y; });
+
+	    node.attr("cx", function(d) { return d.x; })
+	        .attr("cy", function(d) { return d.y; });
+	  });
+	});
+	  d3.select("#chart-27").on("click", function() {
+	  		  force.start();
+	  });
+
+})();
+  </script>
+  <h3 class="bottom">Simple Force Layout</h3>
+</section>
+
+<section>
+  <pre><code>force.on("tick", function(e) {
+  var k = .1 * e.alpha;
+  nodes.forEach(function(o, i) {
+    o.y += (foci[o.id].y - o.y) * k;
+    o.x += (foci[o.id].x - o.x) * k;
+  });
+  svg.selectAll("circle.node")
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
+});
+</code></pre>
+  <div class='chart large' id='chart-28'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+
+	var width = 800,
+	    height = 200;
+	
+	var fill = d3.scale.category10(),
+	    nodes = [],
+	    foci = [{x: 150, y: 100}, {x: 400, y: 100}, {x: 650, y: 100}];
+	
+    
+	var svg = d3.select("#chart-28").append("svg")
+	  .attr("width", width)
+	  .attr("height", height);
+	
+	var force = d3.layout.force()
+	    .nodes(nodes)
+	    .links([])
+	    .gravity(0)
+	    .size([width, height]);
+	
+	force.on("tick", function(e) {
+	
+	  // Push nodes toward their designated focus.
+	  var k = .1 * e.alpha;
+	  nodes.forEach(function(o, i) {
+	    o.y += (foci[o.id].y - o.y) * k;
+	    o.x += (foci[o.id].x - o.x) * k;
+	  });
+	
+	  svg.selectAll("circle.node")
+	      .attr("cx", function(d) { return d.x; })
+	      .attr("cy", function(d) { return d.y; });
+	});
+	
+	  d3.select("#chart-28").on("click", function() {
+		  nodes.push({id: ~~(Math.random() * foci.length)});
+		  force.start();
+
+		  svg.selectAll("circle.node")
+		      .data(nodes)
+		    .enter().append("svg:circle")
+		      .attr("class", "node")
+		      .attr("cx", function(d) { return d.x; })
+		      .attr("cy", function(d) { return d.y; })
+		      .attr("r", 8)
+		      .style("fill", function(d) { return fill(d.id); })
+		      .style("stroke", function(d) { return d3.rgb(fill(d.id)).darker(2); })
+		      .style("stroke-width", 1.5)
+		      .call(force.drag);
+	  });
+})();
+  </script>
+  <h3 class="bottom">Force Layout with Multiple Foci</h3>
+</section>
+
+<!-- <section>
+  <pre><code></code></pre>
+  <div class='chart large' id='chart-29'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+
+	var width = 800,
+	    height = h;
+	
+		var cluster = d3.layout.cluster()
+		    .size([2200, width - 160]);
+
+		var diagonal = d3.svg.diagonal()
+		    .projection(function(d) { return [d.y, d.x]; });
+
+			var svg = d3.select("#chart-29").append("svg")
+			  .attr("width", width)
+			  .attr("height", height);
+
+		var vis = svg
+		  .append("g")
+		    .attr("transform", "translate(40, 0)");
+
+	
+	  d3.select("#chart-29").on("click", function() {
+		d3.json("flare.json", function(json) {
+		  var nodes = cluster.nodes(json);
+
+		  var link = vis.selectAll("path.link")
+		      .data(cluster.links(nodes))
+		    .enter().append("path")
+		      .attr("class", "link")
+		      .attr("d", diagonal);
+
+		  var node = vis.selectAll("g.node")
+		      .data(nodes)
+		    .enter().append("g")
+		      .attr("class", "node")
+		      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+
+		  node.append("circle")
+		      .attr("r", 4.5);
+
+		  node.append("text")
+		      .attr("dx", function(d) { return d.children ? -8 : 8; })
+		      .attr("dy", 3)
+		      .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
+		      .text(function(d) { return d.name; });
+		});
+	  });
+})();
+  </script>
+  <h3 class="bottom">Cluster Layout</h3>
+</section> -->
+
+<section>
+  <pre><code>d3.layout.partition();
+</code></pre>
+  <div class='chart large' id='chart-30'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+
+	var width = 800,
+	    height = 250,
+	    color = d3.scale.category20c();
+    
+	var svg = d3.select("#chart-30").append("svg")
+	  .attr("width", width)
+	  .attr("height", height);
+	
+	var partition = d3.layout.partition()
+	    .size([width, height])
+	    .value(function(d) { return d.size; });
+	
+	d3.select("#chart-30").on("click", function() {
+	  d3.json("flare.json", function(json) {
+	    svg.data([json]).selectAll("rect")
+	        .data(partition.nodes)
+	      .enter().append("rect")
+	        .attr("class","border")
+	        .attr("y", function(d) { return d.y; })
+	        .attr("height", function(d) { return d.dy; })
+	        .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
+	        .transition().duration(1000)
+	          .attr("x", function(d) { return d.x; })
+	          .attr("width", function(d) { return d.dx; });
+	  });
+	});
+})();
+  </script>
+  <h3 class="bottom">Partition Layout</h3>
+</section>
+
+<section>
+  <div class='chart full' id='chart-31'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+
+	var width = 800,
+	    height = 500,
+	    radius = Math.min(width, height) / 2;
+
+	var x = d3.scale.linear()
+	    .range([0, 2 * Math.PI]);
+
+	var y = d3.scale.sqrt()
+	    .range([0, radius]);
+
+	var color = d3.scale.category20c();
+
+	var vis = d3.select("#chart-31").append("svg")
+	    .attr("width", width)
+	    .attr("height", height)
+	  .append("g")
+	    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+	var partition = d3.layout.partition()
+	    .value(function(d) { return d.size; });
+
+	var arc = d3.svg.arc()
+	    .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x))); })
+	    .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))); })
+	    .innerRadius(function(d) { return Math.max(0, y(d.y)); })
+	    .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
+
+	d3.select("#chart-31").on("click", function() {
+		d3.json("flare.json", function(json) {
+		  var path = vis.data([json]).selectAll("path")
+		      .data(partition.nodes)
+		    .enter().append("path")
+		      .attr("d", arc)
+		      .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
+		      .on("click", click);
+
+		  function click(d) {
+		    path.transition()
+		      .duration(750)
+		      .attrTween("d", arcTween(d));
+		  }
+		});
+	});
+
+	// Interpolate the scales!
+	function arcTween(d) {
+	  var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
+	      yd = d3.interpolate(y.domain(), [d.y, 1]),
+	      yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+	  return function(d, i) {
+	    return i
+	        ? function(t) { return arc(d); }
+	        : function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); return arc(d); };
+	  };
+	}
+
+})();
+  </script>
+  <h3 class="bottom">Partition Layout - zoom</h3>
+</section>
+
+<section>
+  <div class="attribution">Source: <a href="http://bost.ocks.org/mike/nations/">Mike Bostock</a>, <a href="https://github.com/RandomEtc/mind-gapper-js">Tom Carden</a>, <a href="http://gapminder.org">Gapminder</a></div>
+  <div class='chart full' id='chart-gm'>
+  </div>
+  <script type='text/javascript'>
+(function() {
+
+	// Various accessors that specify the four dimensions of data to visualize.
+	function x(d) { return d.income; }
+	function y(d) { return d.lifeExpectancy; }
+	function radius(d) { return d.population; }
+	function color(d) { return d.region; }
+	function key(d) { return d.name; }
+
+	// Chart dimensions.
+	var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 39.5},
+	    width = 800 - margin.right,
+	    height = 500 - margin.top - margin.bottom;
+
+	// Various scales. These domains make assumptions of data, naturally.
+	var xScale = d3.scale.log().domain([300, 1e5]).range([0, width]),
+	    yScale = d3.scale.linear().domain([10, 85]).range([height, 0]),
+	    radiusScale = d3.scale.sqrt().domain([0, 5e8]).range([0, 40]),
+	    colorScale = d3.scale.category10();
+
+	// The x & y axes.
+	var xAxis = d3.svg.axis().orient("bottom").scale(xScale).ticks(12, d3.format(",d")),
+	    yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+	// Create the SVG container and set the origin.
+	var svg = d3.select("#chart-gm").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	// Add the x-axis.
+	svg.append("g")
+	    .attr("class", "x axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(xAxis);
+
+	// Add the y-axis.
+	svg.append("g")
+	    .attr("class", "y axis")
+	    .call(yAxis);
+
+	// Add an x-axis label.
+	svg.append("text")
+	    .attr("class", "x label")
+	    .attr("text-anchor", "end")
+	    .attr("x", width)
+	    .attr("y", height - 6)
+	    .text("income per capita, inflation-adjusted (dollars)");
+
+	// Add a y-axis label.
+	svg.append("text")
+	    .attr("class", "y label")
+	    .attr("text-anchor", "end")
+	    .attr("y", 6)
+	    .attr("dy", ".75em")
+	    .attr("transform", "rotate(-90)")
+	    .text("life expectancy (years)");
+
+	// Add the year label; the value is set on transition.
+	var year_label = svg.append("text")
+	    .attr("class", "year label")
+	    .attr("text-anchor", "end")
+	    .attr("y", height - 24)
+	    .attr("x", width)
+	    .text(1800);
+
+	// Add an overlay for the year label.
+	var box = year_label.node().getBBox();
+    
+	var overlay = svg.append("rect")
+	      .attr("class", "overlay")
+	      .attr("x", box.x)
+	      .attr("y", box.y)
+	      .attr("width", box.width)
+	      .attr("height", box.height)
+    
+    var run = false;
+	d3.select("#chart-gm").on("click", function() {
+		if(run) return;
+		run = true;
+		// Load the data.
+		d3.json("nations.json", function(nations) {
+
+		  // A bisector since many nation's data is sparsely-defined.
+		  var bisect = d3.bisector(function(d) { return d[0]; });
+
+		  // Add a dot per nation. Initialize the data at 1800, and set the colors.
+		  var dot = svg.append("g")
+		      .attr("class", "dots")
+		    .selectAll(".dot")
+		      .data(interpolateData(1800))
+		    .enter().append("circle")
+		      .attr("class", "dot")
+		      .style("fill", function(d) { 
+				if (d.name=="Italy") {
+					return "lightblue";
+				} else {
+					return colorScale(color(d));
+				}
+			  })
+		      .style("stroke", function(d) { 
+				if (d.name=="Italy") {
+					return "blue";
+				} else {
+					return "white";
+				}
+			  })
+		      .call(position)
+		      .sort(order);
+
+		  // Add a title.
+		  dot.append("title")
+		      .text(function(d) { return d.name; });
+
+
+		  overlay.on("mouseover", enableInteraction);
+
+		  // Start a transition that interpolates the data based on year.
+		  svg.transition()
+		      .duration(30000)
+		      .ease("linear")
+		      .tween("year", tweenYear)
+		      .each("end", enableInteraction);
+
+		  // Positions the dots based on data.
+		  function position(dot) {
+		    dot .attr("cx", function(d) { return xScale(x(d)); })
+		        .attr("cy", function(d) { return yScale(y(d)); })
+		        .attr("r", function(d) { return radiusScale(radius(d)); });
+		  }
+
+		  // Defines a sort order so that the smallest dots are drawn on top.
+		  function order(a, b) {
+		    return radius(b) - radius(a);
+		  }
+
+		  // After the transition finishes, you can mouseover to change the year.
+		  function enableInteraction() {
+		    var yearScale = d3.scale.linear()
+		        .domain([1800, 2009])
+		        .range([box.x + 10, box.x + box.width - 10])
+		        .clamp(true);
+
+		    // Cancel the current transition, if any.
+		    svg.transition().duration(0);
+
+		    overlay
+		        .on("mouseover", mouseover)
+		        .on("mouseout", mouseout)
+		        .on("mousemove", mousemove)
+		        .on("touchmove", mousemove);
+
+		    function mouseover() {
+		      year_label.classed("active", true);
+		    }
+
+		    function mouseout() {
+		      year_label.classed("active", false);
+		    }
+
+		    function mousemove() {
+		      displayYear(yearScale.invert(d3.mouse(this)[0]));
+		    }
+		  }
+
+		  // Tweens the entire chart by first tweening the year, and then the data.
+		  // For the interpolated data, the dots and label are redrawn.
+		  function tweenYear() {
+		    var year = d3.interpolateNumber(1800, 2009);
+		    return function(t) { displayYear(year(t)); };
+		  }
+
+		  // Updates the display to show the specified year.
+		  function displayYear(year) {
+		    dot.data(interpolateData(year), key).call(position).sort(order);
+		    year_label.text(Math.round(year));
+		  }
+
+		  // Interpolates the dataset for the given (fractional) year.
+		  function interpolateData(year) {
+		    return nations.map(function(d) {
+		      return {
+		        name: d.name,
+		        region: d.region,
+		        income: interpolateValues(d.income, year),
+		        population: interpolateValues(d.population, year),
+		        lifeExpectancy: interpolateValues(d.lifeExpectancy, year)
+		      };
+		    });
+		  }
+
+		  // Finds (and possibly interpolates) the value for the specified year.
+		  function interpolateValues(values, year) {
+		    var i = bisect.left(values, year, 0, values.length - 1),
+		        a = values[i];
+		    if (i > 0) {
+		      var b = values[i - 1],
+		          t = (year - a[0]) / (b[0] - a[0]);
+		      return a[1] * (1 - t) + b[1] * t;
+		    }
+		    return a[1];
+		  }
+		});
+	});
+
+})();
+  </script>
+  <h3 class="bottom">The Wealth & Health of Nation</h3>
+</section>
+
+<section>
+  <h1><a href="http://d3js.org">d3js.org</a></h1><br/>
+  <h3><a href="http://stackoverflow.com/questions/tagged/d3.js" class="orange">d3.js on Stack Overflow</a></h3>
+  <h3><a href="http://groups.google.com/group/d3-js" class="green">d3-js Google Group</a></h3>
+
+  <h3 class="bottom">Further directions</h3>
+
+</section>
+
+<section>
+  <h3>P.S. The presentation is built with <a class="green" href="d3js.org">stack.js</a> whcih uses ... <a class="orange" href="d3js.org">d3</a>!</h3>
+
+  <h5 class="bottom">Stack is made by <a href="http://bost.ocks.org/mike/" rel="author">Mike Bostock</a>
+    <br>and is available on <a href="https://github.com/mbostock/stack">GitHub</a>
+    <br>under the <a href="https://github.com/mbostock/stack/blob/gh-pages/LICENSE">BSD license</a>
+
+</section>
+
+<script src="stack.v0.js"></script>
+<script src="highlight.js"></script>
+
+

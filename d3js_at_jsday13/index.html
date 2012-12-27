@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>The anatomy of a infographic - JdDay 2013</title>
+
+		<meta name="description" content="We have a lot of data at our disposal, and we are ever more producing and collecting data from multiple sources. Data visualizations let us turn raw data into relevant information and make it easier to extract meaning from the information and to reason about it. My talk will show you three visualizations of increasing complexity all developed with d3js and we’ll  analyze how they are built. We’ll see how the different parts fit together to transform a set of raw data into an interactive experience that allows exploring and understanding the information hidden inside it.">
+		<meta name="author" content="Luca Mearelli">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="./css/reveal.min.css">
+		<link rel="stylesheet" href="./css/theme/night.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="./lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="./css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="./lib/js/html5shiv.js"></script>
+		<![endif]-->
+            <script src="./js/d3.v3.min.js"></script>
+    		<link rel="stylesheet" href="css/custom.css">
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section data-markdown>
+					<script type="text/template">
+                    
+The anatomy of an infographic
+=============================
+                        
+[Luca Mearelli](https://spazidigitali.com) / [@lmea](http://twitter.com/lmea)
+
+					</script>
+				</section>
+
+                <section>
+                    <h2 class="bottom">The Wealth & Health of Nation</h2>
+                  <div class='chart full' id='chart-gm'>
+                  </div>
+                  <script type='text/javascript'>
+                (function() {
+
+                	// Various accessors that specify the four dimensions of data to visualize.
+                	function x(d) { return d.income; }
+                	function y(d) { return d.lifeExpectancy; }
+                	function radius(d) { return d.population; }
+                	function color(d) { return d.region; }
+                	function key(d) { return d.name; }
+
+                	// Chart dimensions.
+                	var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 39.5},
+                	    width = 800 - margin.right,
+                	    height = 500 - margin.top - margin.bottom;
+
+                	// Various scales. These domains make assumptions of data, naturally.
+                	var xScale = d3.scale.log().domain([300, 1e5]).range([0, width]),
+                	    yScale = d3.scale.linear().domain([10, 85]).range([height, 0]),
+                	    radiusScale = d3.scale.sqrt().domain([0, 5e8]).range([0, 40]),
+                	    colorScale = d3.scale.category10();
+
+                	// The x & y axes.
+                	var xAxis = d3.svg.axis().orient("bottom").scale(xScale).ticks(12, d3.format(",d")),
+                	    yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+                	// Create the SVG container and set the origin.
+                	var svg = d3.select("#chart-gm").append("svg")
+                	    .attr("width", width + margin.left + margin.right)
+                	    .attr("height", height + margin.top + margin.bottom)
+                	  .append("g")
+                	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                	// Add the x-axis.
+                	svg.append("g")
+                	    .attr("class", "x axis")
+                	    .attr("transform", "translate(0," + height + ")")
+                	    .call(xAxis);
+
+                	// Add the y-axis.
+                	svg.append("g")
+                	    .attr("class", "y axis")
+                	    .call(yAxis);
+
+                	// Add an x-axis label.
+                	svg.append("text")
+                	    .attr("class", "x label")
+                	    .attr("text-anchor", "end")
+                	    .attr("x", width)
+                	    .attr("y", height - 6)
+                	    .text("income per capita, inflation-adjusted (dollars)");
+
+                	// Add a y-axis label.
+                	svg.append("text")
+                	    .attr("class", "y label")
+                	    .attr("text-anchor", "end")
+                	    .attr("y", 6)
+                	    .attr("dy", ".75em")
+                	    .attr("transform", "rotate(-90)")
+                	    .text("life expectancy (years)");
+
+                	// Add the year label; the value is set on transition.
+                	var year_label = svg.append("text")
+                	    .attr("class", "year label")
+                	    .attr("text-anchor", "end")
+                	    .attr("y", height - 24)
+                	    .attr("x", width)
+                	    .text(1800);
+
+                	// Add an overlay for the year label.
+                	var box = year_label.node().getBBox();
+    
+                	var overlay = svg.append("rect")
+                	      .attr("class", "overlay")
+                	      .attr("x", box.x)
+                	      .attr("y", box.y)
+                	      .attr("width", box.width)
+                	      .attr("height", box.height)
+    
+                    var run = false;
+                	d3.select("#chart-gm").on("click", function() {
+                		if(run) return;
+                		run = true;
+                		// Load the data.
+                		d3.json("js/nations.json", function(nations) {
+
+                		  // A bisector since many nation's data is sparsely-defined.
+                		  var bisect = d3.bisector(function(d) { return d[0]; });
+
+                		  // Add a dot per nation. Initialize the data at 1800, and set the colors.
+                		  var dot = svg.append("g")
+                		      .attr("class", "dots")
+                		    .selectAll(".dot")
+                		      .data(interpolateData(1800))
+                		    .enter().append("circle")
+                		      .attr("class", "dot")
+                		      .style("fill", function(d) { 
+                				if (d.name=="Italy") {
+                					return "lightblue";
+                				} else {
+                					return colorScale(color(d));
+                				}
+                			  })
+                		      .style("stroke", function(d) { 
+                				if (d.name=="Italy") {
+                					return "blue";
+                				} else {
+                					return "white";
+                				}
+                			  })
+                		      .call(position)
+                		      .sort(order);
+
+                		  // Add a title.
+                		  dot.append("title")
+                		      .text(function(d) { return d.name; });
+
+
+                		  overlay.on("mouseover", enableInteraction);
+
+                		  // Start a transition that interpolates the data based on year.
+                		  svg.transition()
+                		      .duration(90000)
+                		      .ease("linear")
+                		      .tween("year", tweenYear)
+                		      .each("end", enableInteraction);
+
+                		  // Positions the dots based on data.
+                		  function position(dot) {
+                		    dot .attr("cx", function(d) { return xScale(x(d)); })
+                		        .attr("cy", function(d) { return yScale(y(d)); })
+                		        .attr("r", function(d) { return radiusScale(radius(d)); });
+                		  }
+
+                		  // Defines a sort order so that the smallest dots are drawn on top.
+                		  function order(a, b) {
+                		    return radius(b) - radius(a);
+                		  }
+
+                		  // After the transition finishes, you can mouseover to change the year.
+                		  function enableInteraction() {
+                		    var yearScale = d3.scale.linear()
+                		        .domain([1800, 2009])
+                		        .range([box.x + 10, box.x + box.width - 10])
+                		        .clamp(true);
+
+                		    // Cancel the current transition, if any.
+                		    svg.transition().duration(0);
+
+                		    overlay
+                		        .on("mouseover", mouseover)
+                		        .on("mouseout", mouseout)
+                		        .on("mousemove", mousemove)
+                		        .on("touchmove", mousemove);
+
+                		    function mouseover() {
+                		      year_label.classed("active", true);
+                		    }
+
+                		    function mouseout() {
+                		      year_label.classed("active", false);
+                		    }
+
+                		    function mousemove() {
+                		      displayYear(yearScale.invert(d3.mouse(this)[0]));
+                		    }
+                		  }
+
+                		  // Tweens the entire chart by first tweening the year, and then the data.
+                		  // For the interpolated data, the dots and label are redrawn.
+                		  function tweenYear() {
+                		    var year = d3.interpolateNumber(1800, 2009);
+                		    return function(t) { displayYear(year(t)); };
+                		  }
+
+                		  // Updates the display to show the specified year.
+                		  function displayYear(year) {
+                		    dot.data(interpolateData(year), key).call(position).sort(order);
+                		    year_label.text(Math.round(year));
+                		  }
+
+                		  // Interpolates the dataset for the given (fractional) year.
+                		  function interpolateData(year) {
+                		    return nations.map(function(d) {
+                		      return {
+                		        name: d.name,
+                		        region: d.region,
+                		        income: interpolateValues(d.income, year),
+                		        population: interpolateValues(d.population, year),
+                		        lifeExpectancy: interpolateValues(d.lifeExpectancy, year)
+                		      };
+                		    });
+                		  }
+
+                		  // Finds (and possibly interpolates) the value for the specified year.
+                		  function interpolateValues(values, year) {
+                		    var i = bisect.left(values, year, 0, values.length - 1),
+                		        a = values[i];
+                		    if (i > 0) {
+                		      var b = values[i - 1],
+                		          t = (year - a[0]) / (b[0] - a[0]);
+                		      return a[1] * (1 - t) + b[1] * t;
+                		    }
+                		    return a[1];
+                		  }
+                		});
+                	});
+
+                })();
+                  </script>
+                  <h5 class="attribution">Source: <a href="http://bost.ocks.org/mike/nations/">Mike Bostock</a>, <a href="https://github.com/RandomEtc/mind-gapper-js">Tom Carden</a>, <a href="http://gapminder.org">Gapminder</a></h5>
+                </section>
+ 
+				<section data-markdown>
+					<script type="text/template">
+Visualization <br>=<br> Data + Representation 
+---------------------------------------------
+
+##### The end target is to extract meaningful informations from the raw data.
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+Javascript <br>&<br>Web technologies
+------------------------------------
+
+##### Are the ideal platform to build visualizations: easy to tinker with, powerful, accessible.
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    D3js
+                    ====
+                    
+                    <br>
+##### D3 is a tool to link data to elements and manipulate them.
+##### http://d3js.org
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+> D3 is not an SVG layer, not a compatibility layer and especially not an abstraction layer.
+> 
+> It's a set of tools on top of web technologies to bind data to DOM elements.
+'
+
+##### Chris Viau on D3 vs JQuery
+                    </script>
+                </section>
+
+				<section>
+					<p><img src="quake_twit.png" alt="#earthquake"></p>
+                    <p class="fragment"><img src="iside.png" ><br>
+                    <a href="http://iside.rm.ingv.it/iside/standard/index.jsp"  target="_blank">http://iside.rm.ingv.it/iside/standard/index.jsp</a></p>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+Data
+----                    
+
+```
+Time,Lat,Lon,Depth,Mag,Source,
+2013-05-09 14:30:35.000,43.451,12.310,6.7,1.3,SISBAS,
+2013-05-09 14:15:25.000,43.452,12.308,6.3,0.8,SISBAS,
+```
+
+```Javascript
+quakes = [[ "2013-05-08 11:50:14.000", 43.450, 12.298,  9.6, 3.0 ],
+          [ "2013-05-08 04:29:05.000", 43.452, 12.304, 10.1, 3.3 ]]
+```
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Lets make a barchart (or two)
+                    -----------------------------
+                    
+                    http://tributary.io/inlet/5567235
+                    http://tributary.io/inlet/5567278
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Margin conventions
+                    ------------------
+
+<img src="margin_convention.png" alt="Margin conventions">
+
+<h5><a href="http://bl.ocks.org/mbostock/3019563">http://bl.ocks.org/mbostock/3019563</a></h5>
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Selections
+                    ----------
+                    
+                    ```
+                    var svg = d3.select('svg');
+                    svg.attr({
+                      'width': width + margin.left + margin.right,
+                      'height': height + margin.top + margin.bottom
+                    })
+
+                    var barsGroups = graph.selectAll('g')
+                    ```
+                    ##### http://bost.ocks.org/mike/selection/                    
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Binding data
+                    ----------
+                    
+                    ```
+                    var text = svg.selectAll("rect")
+                                  .data(quakes);
+                    ```                    
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    The general update pattern
+                    ----------
+                    
+                    ```
+                    // Join new data with old elements, if any.
+                    var text = svg.selectAll("text").data(quakes);
+ 
+                     // Update old elements as needed.
+                    text.attr("class", "update");
+
+                     // Create new elements as needed.
+                    text.enter().append("text")
+                        .attr("class", "enter")
+                        .attr("x", function(d, i) { return i * 32; })
+ 
+                    // Appending to the enter selection expands 
+                    // the update selection
+                    text.text(function(d) { return d[4]; });
+
+                    // Remove old elements as needed.
+                    text.exit().remove();
+                     ``` 
+                    ##### http://bl.ocks.org/mbostock/3808218                   
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Scales
+                    ----------
+                    ### Domain → Range
+                    ```
+                    var magScale = d3.scale.linear()
+                    	.domain([2.0, 8.0])
+                    	.range([0, 225]);
+                    ``` 
+                    ##### https://github.com/mbostock/d3/wiki/Scales                 
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Functions everywhere
+                    --------------------
+                    ```
+                    var magExtent = d3.extent(quakes, function (d) { return d[4]; });
+                    
+                    selection
+                    		.append('rect')
+                    		.attr({
+                              'height': function(d,i){
+                              	return magScale(d[4]);
+                              }})
+                    
+                    selection.call(aFunction)
+                    ```
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Call chaining
+                    ----------------
+                    ```
+                    barsGroups
+                    		.append('text')
+                    	    .text(function(d,i) { return String(d[4]);})
+                    		.attr('y', -4)
+                    		.attr("dx", 5) 
+                            .attr("text-anchor", "middle") 
+                    		.attr('font-size', 10)
+                    ```
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    More charts (animated!)
+                    -----------------------
+                    
+                    http://tributary.io/inlet/5567290
+                    http://tributary.io/inlet/5567292
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Axes
+                    ----------------
+                    ```
+                    var yAxis = d3.svg.axis()
+                      .scale(magScale.range([300,30]))
+                      .orient('left')
+                      .ticks(5)
+                      .tickValues([3.0, 3.2, 3.4, 3.6, 3.8])
+                      .tickSize(-width, 1, 1)
+                      .tickPadding(8);
+                      
+                    graph.append('g')
+                      .call(yAxis)
+                    ```
+                    ##### https://github.com/mbostock/d3/wiki/SVG-Axes
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Object constancy
+                    ----------------
+                    ```
+                    graph.selectAll('g')
+                    	 .data(dd, function(d){ return d.Time })
+                    
+                    ```
+                    </script>
+                </section>
+                
+				<section data-markdown>
+					<script type="text/template">
+                    A dynamic barchart
+                    ------------------
+                    
+                    http://tributary.io/inlet/5567329
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Transitions
+                    -----------
+                    ```
+                    barsGroups
+                      .transition()
+                        .duration(2000)
+                        .ease('cubic')
+                        .attr("transform", function(d,i){
+                          x = timeScale(tf.parse(d[0]));
+                          y = 234-magScale(d[4]);
+                          return "translate(" + x + "," + y + ")";
+                        })
+                    ```
+                    ##### http://bost.ocks.org/mike/transition/
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    A simple scatterplot
+                    --------------------
+                    
+                    http://tributary.io/inlet/5567399
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Zooming scatterplot
+                    --------------------
+                    
+                    http://tributary.io/inlet/5567408
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Zooming
+                    -------
+                    ```
+                    var zoom = d3.behavior.zoom()
+                        .x(timeScale)
+                        .on("zoom", zoomed);
+                    ```
+                    </script>
+                </section>
+                
+				<section data-markdown>
+					<script type="text/template">
+                    Lets make a map
+                    ---------------
+                    
+                    http://tributary.io/inlet/5567414
+                    http://tributary.io/inlet/5567524                  
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Projections & geodata
+                    ---------------------
+                    
+                    ```
+                    var projection = d3.geo.mercator()
+                    	.scale(2100)
+                    	.translate([-122,2000])
+
+                    var path = d3.geo.path()
+                    	.projection(projection);
+                    
+                    svg.selectAll("path")
+                    	.data(regions)
+                    	.enter()
+                    	.append('path')
+                    	.attr('d', path)
+                    ```
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Loading data
+                    ---------------------
+                    
+                    ```
+                    d3.json("/static/data/cartography/reg2011.json", function(error, data) {
+                    })
+                    
+                    queue()
+                        .defer("/static/data/cartography/reg2011.json")
+                        .defer("/static/data/quakes.csv")
+                        .await(function(error, reg2011, quakes) { ... });
+                    ```
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    A more complex map
+                    ------------------
+                    
+                    http://tributary.io/inlet/5567533
+                    </script>
+                </section>
+
+				<section data-markdown>
+					<script type="text/template">
+                    Assorted Tips
+                    -------------
+                    
+                    - Group things
+                    - Queue.js:https://github.com/mbostock/queue
+                    - Crossfilter:http://square.github.io/crossfilter/
+                    - Topojson:https://github.com/mbostock/topojson
+                    - Use rapid prototyping tools (e.g. Tributary:http://tributary.io)
+                    </script>
+                </section>
+
+				<section>
+					<h1>Thanks!</h1>
+					<h3>Luca Mearelli / @lmea</h3>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
