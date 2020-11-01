@@ -1,7 +1,7 @@
 {
     "provinceDataUrl": "https://covid19umbria.s3.eu-south-1.amazonaws.com/eventi-data.csv",
     "provinceAnagUrl": "data/comuni_umbria.csv",
-    "mapboxToken": "pk.eyJ1Ijoic3BhemlkaWdpdGFsaSIsImEiOiJja2d3ajRtZmQwYWxjMnJvZndzaWVsbWsxIn0.r3o5zHneSmDGv3HAu7zEsg",
+    "mapboxToken": "pk.eyJ1Ijoic3BhemlkaWdpdGFsaSIsImEiOiJja2d6OHRiYXQwNjBmMzNwcmQ4cHljeWFpIn0.XTSCrZ-nOiYFtWdLGHm7_Q",
     "mapboxStyleUrl": "mapbox://styles/spazidigitali/ckgxsk2vp0r0m19t14b5f5rps",
     "mapBounds": [11.892841036097872,42.3654283356793,13.265111638997935,43.61829615507807],
     "mapCenter": [12.777, 43.010],
