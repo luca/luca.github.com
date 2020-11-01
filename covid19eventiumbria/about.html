@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>
+            Covid Map &ndash; About
+        </title>
+        
+        <style>
+            @import url('https://fonts.googleapis.com/css?family=Merriweather&display=block');
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body,
+            html {
+                width: 100%;
+                height: 100%;
+                margin: 0px;
+                padding: 20px;
+                font-family: 'Merriweather', serif;
+                font-size: 14px;
+                line-height: 1.4em;
+                background-color: #343332;
+                color: #ebcbea;
+            }
+
+            h1 {
+                color: white;
+                font-size: 20px;
+                margin: 10px 0 5px 0;
+                font-weight: normal;
+            }
+
+            h2 {
+                color: white;
+                font-size: 14px;
+                margin: 30px 0 5px 0;
+                font-weight: normal;
+            }
+
+            p {
+                max-width: 600px;
+            }
+
+            a {
+                color: #ebcbea;
+            }
+
+            a:hover {
+                color: white;
+            }
+
+            .brand {
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEIAAAAoCAYAAABKOyzUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NTc3MiwgMjAxNC8wMS8xMy0xOTo0NDowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkREQkM5NjhBNDM5NDExRTY4NEQ3OUFDNjI0QzhFODBDIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkREQkM5NjhCNDM5NDExRTY4NEQ3OUFDNjI0QzhFODBDIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RERCQzk2ODg0Mzk0MTFFNjg0RDc5QUM2MjRDOEU4MEMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RERCQzk2ODk0Mzk0MTFFNjg0RDc5QUM2MjRDOEU4MEMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz74zgkDAAAKXElEQVR42tya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);
+                background-size: 50px auto;
+                background-repeat: no-repeat;
+                padding: 5px 0 0 60px;
+                width: 150px;
+                height: 30px;
+                left: 340px;
+                top: 30px;
+                color: white;
+                font-weight: normal;
+                font-size: 11px;
+                letter-spacing: 0.6px;
+                font-family: arial;
+                opacity: 0.7;
+                margin-top: 14px;
+            }
+
+            .brand:hover {
+                cursor: pointer;
+                opacity: 1;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Covid Map</h1>
+    </body>
+</html>

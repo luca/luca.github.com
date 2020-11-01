@@ -1,0 +1,13 @@
+measureID,descrizione,province,regioni,denominatori
+ricoverati_con_sintomi,ricoverati con sintomi,0,1,totale_ospedalizzati|totale_attualmente_positivi|totale_casi|casi_testati
+terapia_intensiva,terapia intensiva,0,1,totale_ospedalizzati|totale_attualmente_positivi|totale_casi|casi_testati
+totale_ospedalizzati,ospedalizzati,0,1,totale_attualmente_positivi|totale_casi|casi_testati
+isolamento_domiciliare,isolamento domiciliare,0,1,totale_attualmente_positivi|totale_casi|casi_testati
+totale_positivi,positivi,0,1,totale_casi|casi_testati
+dimessi_guariti,dimessi guariti,0,1,totale_casi|casi_testati
+deceduti,deceduti,0,1,totale_casi|casi_testati
+casi_da_sospetto_diagnostico,casi da sospetto diagnostico,0,1,casi_testati
+casi_da_screening,casi da screening,0,1,casi_testati
+totale_casi,casi totali,1,1,casi_testati
+casi_testati,casi testati,0,1,
+tamponi,tamponi,0,1,
