@@ -11,3 +11,5 @@ title: ''
 
 **[Edgesense](https://github.com/Wikitalia/edgesense)** is an attempt at making tools for social network analysis accessible to all those that could gain the most from them but maybe did not yet know their potential. Through the dashboard community managers can for the first time see in a glimpse who is talking to who, which users are central to the community and those who are on the periphery. They can see which sub-communities are developing inside the larger online conversation and who is acting as a bridge between them. (Edgesense was developed with [Wikitalia](http://www.wikitalia.org) for the [CATALYST](http://catalyst-fp7.eu) project on collective intelligence)
 
+.
+
