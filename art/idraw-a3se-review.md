@@ -11,9 +11,9 @@ Pen plotters have been a particularly exciting discovery in my journey. These de
 
 ## Enter the UUNA TEK iDraw H SE/A3
 
-Last month, I upgraded to the UUNA TEK iDraw H SE/A3, a new plotter model that promises to be "the ultimate special edition for artists seeking perfection in their work." This review will share my experience with this device, from unboxing to creating complex generative artworks.
+Last month, I had the opportunity to explore the capabilities of the UUNA TEK iDraw H SE/A3, a new plotter model that UUNA TEK touts as "the ultimate special edition for artists seeking perfection in their work." The company graciously provided me with this device for the purpose of testing and reviewing it. This review will share my comprehensive experience with the iDraw H SE/A3, from the initial unboxing to creating complex generative artworks, offering insights into its performance and potential for both hobbyists and professional artists alike.
 
-![The two plotters](images/two-plotters.jpeg)
+{% include image.html url="images/two-plotters.jpeg" description="The iDraw H SE/A3 on the left and the 1.0 A4 on the right" %}
 
 ## Technical Specifications and Features
 
@@ -25,6 +25,8 @@ The plotter's redesigned base plate is another noteworthy improvement, accommoda
 
 While the plotter has plenty of space and the marks on the baseplate are a godsend to help quickly position the paper, I would have liked if the baseplate had a little more space around the plottable area to be able to use the FA4 fabriano sheets. These come in a 480mm by 330mm size and I feel they are the perfect size to output a full A3 artwork with a nice border. I was able to use them but placing the sheet was a bit more work than I would have liked.
 
+{% include image.html url="images/truchet.jpeg" description="A truchet plotted on the Fabriano 480mmx330mm paper" %}
+
 In terms of performance, the H SE/A3 doesn't disappoint. It offers high-speed operation with a maximum XY travel speed of 15 inches (38 cm) per second. The plotter's precise movements are ensured by a native XY resolution of 2032 steps per inch (80 steps per mm), resulting in exceptional accuracy. At low speeds, it typically achieves reproducibility (XY) better than 0.005 inches (0.1 mm), making it suitable for even the most detailed artwork.
 
 These technical specifications, while impressive on their own, come together to create a plotter that's not just a tool, but a reliable partner in bringing digital art into the physical realm.
@@ -32,6 +34,8 @@ These technical specifications, while impressive on their own, come together to 
 ## The Machine's Design
 
 The iDraw H SE/A3 features a robust H-shaped frame with an integrated base, making it more stable and easier to move than some other plotter designs. Its sturdy construction not only enhances durability but also contributes to the machine's precision and reliability during operation.
+
+{% include image.html url="images/sphere.jpeg" description="the SE/A3 plotting a sphere" %}
 
 ## Unboxing and Setup
 
@@ -57,11 +61,13 @@ There are several ways to create artwork for the iDraw H SE/A3:
 
 I've tested the plotter with one for each of these cases:
 
-A simple static SVG of a sphere
+A simple static SVG of a [sphere](images/sphere.svg)
 
-A truchet tile generated from my own p5js code
+A [truchet](images/truchet.svg) tile generated from my own p5js code
 
-An line-art SVG obtained processing an image of the moon I took months ago
+An line-art SVG obtained processing an image of the [moon](images/moon.svg) I took months ago
+
+{% include image.html url="images/moon.jpeg" description="The Moon" %}
 
 ## Printing from Inkscape
 
@@ -75,7 +81,10 @@ Once your artwork is ready, follow these steps to plot it:
 6. Use the toggle command to lower the pen and check its contact with the paper.
 7. Switch to the plot tab in the extension and click "Apply" to start plotting.
 
+{% include image.html url="images/inkscape-extension-1.png" description="The Inkscape extension popup" %}
+
 The Inkscape extension offers various customization options, including:
+
 - Pen height adjustments for up and down positions
 - Drawing speed settings (separate for pen up and pen down movements)
 - Acceleration control
@@ -259,49 +268,65 @@ While in interactive mode you can use a number of methods to draw and move the p
 — `pendown()` Lower the pen.
 — `draw_path()` Draw a path defined by a coordinate list.
 
-Here is a more complex example using math and the API to draw a sequence of sine waves on the page:
+Here is a more complex example using math and the API to draw a sequence of waves on the page:
 
 ```python
 import math
+import random
 from pyaxidraw import axidraw
 
-# Initialize AxiDraw object
+# Initialize AxiDraw
 ad = axidraw.AxiDraw()
 ad.interactive()
-ad.options.units = 2  # Use millimeters
+ad.options.units = 2  # Set mm units
+if not ad.connect():  # Open serial port to AxiDraw
+    quit()  # Exit, if no connection
 
-# Connect to AxiDraw
-if not ad.connect():
-    quit()
+# A3 page dimensions in mm
+PAGE_WIDTH = 420
+PAGE_HEIGHT = 297
+BORDER = 20  # 2cm border
 
-# Function to draw a sine wave
-def draw_sine_wave(start_y, amplitude, wavelength, length, num_points=100):
-    vertices = []
-    for vertex in range(num_points):
-        x_position = vertex * (length / num_points)  # Divide the length into points
-        y_position = start_y + amplitude * math.sin(2 * math.pi * vertex / wavelength)
-        vertices.append([x_position, y_position])
-    return vertices
+# Calculate drawing area
+DRAW_WIDTH = PAGE_WIDTH - 2 * BORDER
+DRAW_HEIGHT = PAGE_HEIGHT - 2 * BORDER
 
-# Parameters
-page_width = 297  # Width of A4 paper in mm
-page_height = 210  # Height of A4 paper in mm
-num_waves = 20  # Number of sine waves to draw
-max_amplitude = 20  # Max amplitude (height) of the sine wave in mm
-wave_length = 50  # Wavelength in mm
-spacing = 10  # Vertical spacing between each wave
-wave_length_x = page_width  # Length of the wave along the x-axis
+def generate_wave(x, amplitude, frequency, phase):
+    return amplitude * math.sin(frequency * x + phase)
 
-# Loop to draw sine waves
-for i in range(num_waves):
-    start_y = i * spacing  # Position each sine wave at increasing y positions
-    amplitude = (i / num_waves) * max_amplitude  # Gradually increase the amplitude
-    path = draw_sine_wave(start_y, amplitude, wave_length, wave_length_x)
-    ad.draw_path(path)
+# Generate the drawing
+vertices = []
+num_waves = random.randint(3, 7)  # Random number of overlapping waves
+x_step = 0.5  # Step size for x-axis
 
-# Return to origin and disconnect
-ad.moveto(0, 0)  # Move to home position
-ad.disconnect()  # Disconnect AxiDraw
+for x in range(int(DRAW_WIDTH / x_step)):
+    x_pos = x * x_step
+    y_pos = 0
+    
+    for _ in range(num_waves):
+        amplitude = random.uniform(5, 20)
+        frequency = random.uniform(0.01, 0.1)
+        phase = random.uniform(0, math.tau)
+        wave_type = random.choice([math.sin, math.cos])
+        
+        y_pos += wave_type(frequency * x_pos + phase) * amplitude
+    
+    # Scale and center the y position
+    y_pos = (y_pos / num_waves) + (DRAW_HEIGHT / 2)
+    
+    # Add border offset
+    vertices.append([x_pos + BORDER, y_pos + BORDER])
+
+# Draw the generative piece
+ad.draw_path(vertices)
+
+# Return to home position
+ad.moveto(0, 0)
+
+# Disconnect
+ad.disconnect()
+
+print("Drawing complete!")
 ```
 
 As you can see having a programmable interface may increase the ways you can create with your plotter and the A3/SE is the perfect companion to use.
