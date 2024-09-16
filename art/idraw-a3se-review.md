@@ -13,6 +13,8 @@ Pen plotters have been a particularly exciting discovery in my journey. These de
 
 Last month, I upgraded to the UUNA TEK iDraw H SE/A3, a new plotter model that promises to be "the ultimate special edition for artists seeking perfection in their work." This review will share my experience with this device, from unboxing to creating complex generative artworks.
 
+![The two plotters](images/two-plotters.jpeg)
+
 ## Technical Specifications and Features
 
 The iDraw H SE/A3 continues to utilize the efficient CoreXY design, a feature that has been a hallmark of iDraw plotters, ensuring enhanced precision and stability for both drawing and engraving tasks. This latest model, however, takes a step further with its all-in-one, pre-assembled design that's ready to use straight out of the box, significantly simplifying the setup process for users.
@@ -108,7 +110,7 @@ In the following examples, I'll demonstrate the commands used to set up the API 
 
 The official install package for the command line and the python module is at:
 
-https://cdn.evilmadscientist.com/dl/ad/public/AxiDraw_API.zip
+[https://cdn.evilmadscientist.com/dl/ad/public/AxiDraw_API.zip](https://cdn.evilmadscientist.com/dl/ad/public/AxiDraw_API.zip)
 
 and the last released package as of this writing is version 3.9.6.
 
@@ -175,6 +177,8 @@ Other interesting options allow you to show a progress bar to monitor the plotti
 axicli images/sphere.svg --progress
 ```
 
+here is an example output:
+
 ```
 Plot Progress: 15%|####3 | 2376/15203 [01:31<06:55, 43.11 mm/s]
 ```
@@ -185,7 +189,7 @@ Last option I want to outline is the webhook option. As the name suggests, it al
 axicli images/sphere.svg --webhook --webhook_url "https://example.com/notify"
 ```
 
-I plan to use it to get notified of the plotter completing the work when I need to leave it unattended. 
+I'm planning to use it to get notified of the plotter completing the work when I need to leave it unattended. 
 
 ### Python API Usage
 
