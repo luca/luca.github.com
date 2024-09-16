@@ -258,15 +258,17 @@ Options may be specified after the interactive() call and they will be applied w
 
 While in interactive mode you can use a number of methods to draw and move the pen around, from the documentation:
 
-— `goto()` Absolute move to (x,y) location.
-— `moveto()` Absolute pen-up move to (x,y) location.
-— `lineto()` Absolute pen-down move to (x,y) location.
-— `go()` Relative move of distance (Δx,Δy).
-— `move()` Relative pen-up move of (Δx,Δy).
-— `line()` Relative pen-down move of (Δx,Δy).
-— `penup()` Raise the pen.
-— `pendown()` Lower the pen.
-— `draw_path()` Draw a path defined by a coordinate list.
+
+* `goto()` Absolute move to (x,y) location.
+* `moveto()` Absolute pen-up move to (x,y) location.
+* `lineto()` Absolute pen-down move to (x,y) location.
+* `go()` Relative move of distance (Δx,Δy).
+* `move()` Relative pen-up move of (Δx,Δy).
+* `line()` Relative pen-down move of (Δx,Δy).
+* `penup()` Raise the pen.
+* `pendown()` Lower the pen.
+* `draw_path()` Draw a path defined by a coordinate list.
+
 
 Here is a more complex example using math and the API to draw a sequence of waves on the page:
 
