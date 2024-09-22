@@ -7,13 +7,17 @@ title: "Bridging Digital and Physical: A Review and Tutorial for the UUNA TEK iD
 
 As a software developer with a passion for art and design, I've always been drawn to the intersection of technology and creativity. In recent years, I've discovered the fascinating world of generative art, experimenting with tools like Processing, p5.js, and various creative coding techniques. These have provided a perfect bridge between my coding skills and artistic inclinations.
 
-Pen plotters have been a particularly exciting discovery in my journey. These devices bring generative art full circle, transforming digital creations into physical artwork that can be appreciated by those less familiar with digital art – and they look great hanging on the walls at home! In 2023, I took my first step into the world of plotters with the UUNA TEK iDraw 1.0 A4, an excellent beginner-friendly machine. While it produced nice quality outputs, its limited size eventually left me wanting more.
+Pen plotters have been a particularly exciting discovery in my journey. These devices bring generative art full circle, transforming digital creations into physical artwork that can be appreciated by those less familiar with digital art – and they look great hanging on the walls at home! In 2023, I took my first step into the world of plotters with the [UUNA TEK iDraw 1.0 A4](https://uunatek.com/products/idraw-1-0-pen-plotter-handwriting-drawing-machine-xy-plotter), an excellent beginner-friendly machine. While it produced nice quality outputs, its limited size eventually left me wanting more.
 
 ## Enter the UUNA TEK iDraw H SE/A3
 
-Last month, I had the opportunity to explore the capabilities of the UUNA TEK iDraw H SE/A3, a new plotter model that UUNA TEK touts as "the ultimate special edition for artists seeking perfection in their work." The company graciously provided me with this device for the purpose of testing and reviewing it. This review will share my comprehensive experience with the iDraw H SE/A3, from the initial unboxing to creating complex generative artworks, offering insights into its performance and potential for both hobbyists and professional artists alike.
+Last month, I had the opportunity to explore the capabilities of the [UUNA TEK iDraw H SE/A3](https://uunatek.com/products/idraw-h-se-a3-size-drawing-robot-drawing-machine-homework-machine-calligraphy-plotter-handwriting-robot-pen-plotter-laser-engraver), a new plotter model that UUNA TEK touts as "the ultimate special edition for artists seeking perfection in their work." The company graciously provided me with this device for the purpose of testing and reviewing it. This review will share my comprehensive experience with the iDraw H SE/A3, from the initial unboxing to creating complex generative artworks, offering insights into its performance and potential for both hobbyists and professional artists alike.
 
 {% include image.html url="images/two-plotters.jpeg" description="The iDraw H SE/A3 on the left and the 1.0 A4 on the right" %}
+
+<div class="well">
+    There is currently a fall sale at [Uunatek](https://uunatek.com), **plus** you can use the coupon code ( **LUCAVIP** ) to get 15% off on any purchase at checkout.
+</div>
 
 ## Technical Specifications and Features
 
@@ -355,3 +359,7 @@ The UUNA TEK iDraw H SE/A3 is a significant step up from entry-level plotters, o
 While there's a learning curve involved in mastering the nuances of different pens, papers, and programming options, the results are well worth the effort. The iDraw H SE/A3 opens up new creative possibilities, allowing artists to explore the fascinating intersection of generative art and traditional media.
 
 Whether you're a seasoned generative artist or just beginning to explore this field, the UUNA TEK iDraw H SE/A3 offers a powerful tool for translating your digital visions into tangible, one-of-a-kind artworks. Happy plotting!
+
+<div class="well">
+    Don't forget, use the coupon code ( **LUCAVIP** ) to get 15% off on any purchase at checkout at [https://uunatek.com](https://uunatek.com)
+</div>
