@@ -276,7 +276,7 @@ While in interactive mode you can use a number of methods to draw and move the p
 * `draw_path()` Draw a path defined by a coordinate list.
 
 
-Here is a more complex example using math and the API to draw a sequence of waves on the page:
+Here is a more complex example using math and the API to draw a flow field on the page:
 
 ```python
 import math
@@ -299,34 +299,38 @@ BORDER = 20  # 2cm border
 DRAW_WIDTH = PAGE_WIDTH - 2 * BORDER
 DRAW_HEIGHT = PAGE_HEIGHT - 2 * BORDER
 
-def generate_wave(x, amplitude, frequency, phase):
-    return amplitude * math.sin(frequency * x + phase)
+# Flow field parameters
+RESOLUTION = 10  # mm between each grid point
+NOISE_SCALE = 0.01
+NUM_PARTICLES = 500
+STEP_SIZE = 2  # mm
 
-# Generate the drawing
-vertices = []
-num_waves = random.randint(3, 7)  # Random number of overlapping waves
-x_step = 0.5  # Step size for x-axis
+def noise(x, y):
+    # Simple noise function (you might want to use a better one like Perlin noise)
+    return math.sin(x * NOISE_SCALE) * math.cos(y * NOISE_SCALE)
 
-for x in range(int(DRAW_WIDTH / x_step)):
-    x_pos = x * x_step
-    y_pos = 0
-    
-    for _ in range(num_waves):
-        amplitude = random.uniform(5, 20)
-        frequency = random.uniform(0.01, 0.1)
-        phase = random.uniform(0, math.tau)
-        wave_type = random.choice([math.sin, math.cos])
+def get_angle(x, y):
+    return noise(x, y) * 2 * math.pi
+
+def in_bounds(x, y):
+    return BORDER <= x <= PAGE_WIDTH - BORDER and BORDER <= y <= PAGE_HEIGHT - BORDER
+
+# Generate and draw the flow field
+for _ in range(NUM_PARTICLES):
+    x = random.uniform(BORDER, PAGE_WIDTH - BORDER)
+    y = random.uniform(BORDER, PAGE_HEIGHT - BORDER)
+    vertices = [[x,y]]
+    for _ in range(100):  # Maximum 100 steps per particle
+        angle = get_angle(x, y)
+        new_x = x + math.cos(angle) * STEP_SIZE
+        new_y = y + math.sin(angle) * STEP_SIZE
         
-        y_pos += wave_type(frequency * x_pos + phase) * amplitude
-    
-    # Scale and center the y position
-    y_pos = (y_pos / num_waves) + (DRAW_HEIGHT / 2)
-    
-    # Add border offset
-    vertices.append([x_pos + BORDER, y_pos + BORDER])
-
-# Draw the generative piece
-ad.draw_path(vertices)
+        if in_bounds(new_x, new_y):
+            vertices.append([new_x, new_y])
+            x, y = new_x, new_y
+        else:
+            break
+    ad.draw_path(vertices)
 
 # Return to home position
 ad.moveto(0, 0)
