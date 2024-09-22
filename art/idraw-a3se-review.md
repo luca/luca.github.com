@@ -17,7 +17,7 @@ Last month, I had the opportunity to explore the capabilities of the [UUNA TEK i
 
 <div class="well">
 
-    There is currently a fall sale at [Uunatek](https://uunatek.com), **plus** you can use the coupon code ( *LUCAVIP* ) to get 15% off on any purchase at checkout.
+    There is currently a fall sale at <a href="https://uunatek.com">Uunatek</a>, <b>plus</b> you can use the coupon code ( <b>LUCAVIP</b> ) to get 15% off on any purchase at checkout.
 
 </div>
 
@@ -364,6 +364,6 @@ Whether you're a seasoned generative artist or just beginning to explore this fi
 
 <div class="well">
 
-    Don't forget, use the coupon code ( *LUCAVIP* ) to get 15% off on any purchase at checkout at [https://uunatek.com](https://uunatek.com)
+    Don't forget, use the coupon code ( <b>LUCAVIP</b> ) to get 15% off on any purchase at checkout at <a href="https://uunatek.com">https://uunatek.com</a>
 
 </div>
