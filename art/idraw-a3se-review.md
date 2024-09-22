@@ -15,11 +15,11 @@ Last month, I had the opportunity to explore the capabilities of the [UUNA TEK i
 
 {% include image.html url="images/two-plotters.jpeg" description="The iDraw H SE/A3 on the left and the 1.0 A4 on the right" %}
 
-<div class="well">
+<p class="well">
 
     There is currently a fall sale at <a href="https://uunatek.com">Uunatek</a>, <b>plus</b> you can use the coupon code ( <b>LUCAVIP</b> ) to get 15% off on any purchase at checkout.
 
-</div>
+</p>
 
 ## Technical Specifications and Features
 
@@ -362,8 +362,8 @@ While there's a learning curve involved in mastering the nuances of different pe
 
 Whether you're a seasoned generative artist or just beginning to explore this field, the UUNA TEK iDraw H SE/A3 offers a powerful tool for translating your digital visions into tangible, one-of-a-kind artworks. Happy plotting!
 
-<div class="well">
+<p class="well">
 
     Don't forget, use the coupon code ( <b>LUCAVIP</b> ) to get 15% off on any purchase at checkout at <a href="https://uunatek.com">https://uunatek.com</a>
 
-</div>
+</p>
